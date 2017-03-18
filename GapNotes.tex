@@ -1,0 +1,2028 @@
+\section{Introduction: a very few, very basic commands}
+\begin{enumerate}[a.]
+\item {\bf Help.}  A convenient way of reading the documentation at the gap prompt is
+ with the {\tt ?} symbol, as in:
+{\codesize
+\begin{verbatim}
+?tutorial:a first session with gap
+\end{verbatim}}
+\noindent This starts the basic \gap\ tutorial.  After reading the first page,
+you can move to the next page by entering {\tt ?>}, and the previous page with
+{\tt ?<}.  
+
+As another example, if you want to learn about commands involving, say,
+the centralizer, just enter the command
+{\tt ?centralizer} for a list of related help topics.
+
+\item {\bf Comments} 
+in \gap\ begin with the sharp character {\tt \#}.  The whole comment, including
+{\tt \#} and the newline character, is treated as a single whitespace. 
+%Inside a string, the comment character {\tt \#} loses its role and is just
+%an ordinary character.
+
+\item {\bf Functions.} You can define a function in a ${\tt .gap}$ file or ``in-line'' as follows:
+{\codesize
+\begin{verbatim}
+ cubed := x -> x^3;
+\end{verbatim}}
+\noindent Then {\tt cubed(5)} returns 125.
+
+\item 
+\gap\ composes permutations left-to-right.  
+That is, \verb|(1,2,4)*(1,2)| gives \verb|(2,4)|;\\
+\emph{not} right-to-left; that is, $(1,2,4)(1,2) \neq (1,4)$.
+
+\item
+The carrot operator \verb|^| is used to determine the image of a point under a
+permutation and to conjugate one permutation by another. 
+e.g.~\verb|(1,2,3)^-1| gives \verb|(1,3,2)|, \verb|2^(1,2,3)| gives 3, and
+\verb|(1,2,3)^(1,2)| gives \verb|(1,3,2)|.
+That is (for the last one), $(1,2,3)^{(1,2)} = (1,2)(1,2,3)(1,2) = (1,3,2)$.
+\item
+The preimage of a point $i$ under a permutation $p$ is given by $i/p$.  For example,
+\verb|2/(1,2,3)| gives 1, and, since $(1,2,4)(1,2) = (2,4)$,
+\verb|3/((1,2,4)(1,2))| gives 3, and \verb|2/((1,2,4)(1,2))| gives 4.
+\item 
+You can get an overview of all \gap\ variables with the command {\tt NamesGVars();} and
+you can see the user-defined variables of the current session using 
+{\tt NamesUserGVars();}.
+The name of every global variable in the \gap\ library starts with a capital letter, so you
+should start user-defined variable names with a lower case letter (or a number).
+\end{enumerate}
+
+\newpage 
+
+\section{Some important groups\protect\footnotemark}  
+\footnotetext{See also the \gap\ Manual~\cite{gapmanual}, Chapter 48 ``Group Libraries.''}
+There are several infinite families of groups which are parametrized by numbers. \gap\
+provides various functions to construct these groups. The functions always permit
+(but do not require) one to indicate a 
+filter, for example {\tt IsPermGroup, IsMatrixGroup} or {\tt IsPcGroup}, in which the
+group shall be constructed. 
+There always is a default filter corresponding to a ``natural'' way to describe the
+group in question. Note that not every group can be constructed in every filter,
+there may be theoretical restrictions ({\tt IsPcGroup} only works for solvable
+groups) or methods may be available only for a few filters. 
+Certain filters may admit additional hints. For example, groups constructed in
+{\tt IsMatrixGroup} may be constructed over a specified field, which can be given as
+second argument of the function that constructs the group; The default field is
+{\tt Rationals}.
+\begin{itemize}
+\item {\tt TrivialGroup( [filt] )}\\[2pt] 
+constructs a trivial group in the category given by the filter {\tt filt}. If {\tt filt} is not given it defaults to
+{\tt IsPcGroup}. %For example,
+{\codesize
+\begin{verbatim}
+gap> TrivialGroup();
+<pc group of size 1 with 0 generators>
+gap> TrivialGroup( IsPermGroup );    # returns Group(())
+\end{verbatim}}
+\noindent CAUTION: if you want to test whether a certain subgroup $H \leq G$ is the
+identity of $G$, you can't simply type {\tt H=Group(())} or {\tt H=TrivialGroup()}.  
+Instead, define the trivial subgroup of $G$ with {\tt e:=Group([Identity(G)])}.  Then
+{\tt H=e} tests whether $H$ is trivial.
+
+\item {\tt CyclicGroup( [filt, ] n )}\\[2pt] 
+constructs the cyclic group of size n in the category {\tt filt}. 
+If {\tt filt} is not given it defaults to {\tt IsPcGroup}.
+%For example, 
+{\codesize
+\begin{verbatim}
+gap> CyclicGroup(12);
+<pc group of size 12 with 3 generators>
+gap> CyclicGroup(IsPermGroup,12);
+Group([ (1,2,3,4,5,6,7,8,9,10,11,12) ])
+gap> matgrp1:= CyclicGroup( IsMatrixGroup, 12 );
+<matrix group of size 12 with 1 generators>
+gap> FieldOfMatrixGroup( matgrp1 );
+Rationals
+gap> matgrp2:= CyclicGroup( IsMatrixGroup, GF(2), 12 );
+<matrix group of size 12 with 1 generators>
+gap> FieldOfMatrixGroup( matgrp2 );
+GF(2)
+\end{verbatim}}
+\item {\tt AbelianGroup( [filt, ] i )}\\[2pt] 
+constructs an abelian group in the category {\tt filt} which is
+of isomorphism type 
+\[
+\Z_{\mbox{i}[1]} \oplus \Z_{\mbox{i}[2]} \oplus \cdots \oplus \Z_{\mbox{i}[n]}.
+\]
+Here {\tt i} must be a list of positive integers. If {\tt filt} is not given it
+defaults to {\tt IsPcGroup}. 
+The generators of the group returned corresponding to the integers in {\tt i}.  %For example,
+{\codesize
+\begin{verbatim}
+gap> AbelianGroup([1,2,3]);
+<pc group of size 6 with 3 generators>
+\end{verbatim}}
+\item {\tt ElementaryAbelianGroup( [filt, ] n )}\\[2pt] 
+constructs the elementary abelian group of size n in the category given by the filter
+{\tt filt}. If {\tt filt} is not given it defaults to {\tt IsPcGroup}.
+%For example,
+{\codesize
+\begin{verbatim}
+gap> ElementaryAbelianGroup(8192);
+<pc group of size 8192 with 13 generators>
+\end{verbatim}}
+\item {\tt DihedralGroup( [filt, ] n )}\\[2pt] 
+constructs the dihedral group of size n in the category given by the filter
+{\tt filt}. If {\tt filt} is not given it defaults to {\tt IsPcGroup}.
+%For example,
+{\codesize
+\begin{verbatim}
+gap> DihedralGroup(10);
+<pc group of size 10 with 2 generators>
+\end{verbatim}}
+% \item {\tt ExtraspecialGroup( [filt, ] ord, exp )}\\[2pt] 
+% Let {\tt ord} be of the form $p^{2n+1}$, for a prime integer $p$ and a positive integer $n$. 
+% {\tt ExtraspecialGroup} returns the extraspecial group of order {\tt ord} that is
+% determined by {\tt exp}, in the category given by the filter {\tt filt}. 
+% If $p$ is odd then admissible values of {\tt exp} are the exponent of the group
+% (either $p$ or $p^2$) or one of 
+% {\tt '+', "+", '-',} or {\tt "-"}. For $p = 2$, only the above plus or minus signs are admissible.
+% If {\tt filt} is not given it defaults to {\tt IsPcGroup}.
+% \begin{verbatim}
+% gap> ExtraspecialGroup( 27, 3 );
+% <pc group of size 27 with 3 generators>
+% gap> ExtraspecialGroup( 27, '+' );
+% <pc group of size 27 with 3 generators>
+% gap> ExtraspecialGroup( 8, "-" );
+% <pc group of size 8 with 3 generators>
+% \end{verbatim}
+\item {\tt AlternatingGroup( [filt, ] deg )}
+\item {\tt AlternatingGroup( [filt, ] dom )}\\[2pt] 
+constructs the alternating group of degree {\tt deg} in the category given by the
+filter {\tt filt}. 
+If {\tt filt} is not given it defaults to {\tt IsPermGroup}.
+In the second version, the function constructs the alternating group on the points
+given in the set {\tt dom} which must be a set of positive integers.
+{\codesize
+\begin{verbatim}
+gap> AlternatingGroup(5);
+Alt( [ 1 .. 5 ] )
+\end{verbatim}}
+\item {\tt SymmetricGroup( [filt, ] deg )}
+\item {\tt SymmetricGroup( [filt, ] dom )}\\[2pt] 
+constructs the symmetric group of degree {\tt deg} in the category given by the
+filter {\tt filt}. 
+If {\tt filt} is not given it defaults to {\tt IsPermGroup}.
+In the second version, the function constructs the symmetric group on the points
+given in the set {\tt dom} which must be a set of positive integers.
+{\codesize
+\begin{verbatim}
+gap> SymmetricGroup(10);
+Sym( [ 1 .. 10 ] )
+\end{verbatim}}
+\end{itemize}
+
+\newpage
+
+\section{Factor groups\protect\footnotemark}  
+\footnotetext{See also the \gap\ Manual~\cite{gapmanual}, Section 37.18.}
+\begin{itemize}
+\item {\tt NaturalHomomorphismByNormalSubgroup( G, N )}
+\item {\tt NaturalHomomorphismByNormalSubgroupNC( G, N )}\\[2pt] 
+returns a homomorphism from $G$ to another group whose kernel is $N$. \gap\ will try to select the image
+group as to make computations in it as efficient as possible. As the factor group $G/N$ can be identified with
+the image of $G$ this permits efficient computations in the factor group. The homomorphism returned is not
+necessarily surjective, so {\tt ImagesSource} should be used instead of {\tt Range} to get a group isomorphic to the
+factor group. The {\tt NC} variant does not check whether $N$ is normal in $G$.
+\item {\tt FactorGroup( G, N )}, {\tt FactorGroupNC( G, N )}\\[2pt] 
+%\item {\tt FactorGroupNC( G, N )}\\[2pt] 
+returns the image of the {\tt NaturalHomomorphismByNormalSubgroup(G,N)}. The {\tt NC} version does not test
+whether $N$ is normal in $G$.
+{\codesize
+\begin{verbatim}
+gap> g:=Group((1,2,3,4),(1,2));;  n:=Subgroup(g,[(1,2)(3,4),(1,3)(2,4)]);;
+gap> hom:=NaturalHomomorphismByNormalSubgroup(g,n);
+[ (1,2,3,4), (1,2) ] -> [ f1*f2, f1 ]
+gap> Size(ImagesSource(hom));  # returns 6
+gap> FactorGroup(g,n);         # returns Group([ f1, f2 ])
+\end{verbatim}}
+\item {\tt CommutatorFactorGroup( G )}\\[2pt] 
+computes the commutator factor group $G/G'$ of the group $G$.
+{\codesize
+\begin{verbatim}
+gap> CommutatorFactorGroup(g);
+Group([ f1 ])
+\end{verbatim}}
+\item {\tt MaximalAbelianQuotient( grp )}\\[2pt] 
+returns an epimorphism from {\tt grp} onto the maximal abelian quotient of {\tt grp}. The kernel of this epimorphism
+is the derived subgroup.
+\item {\tt HasAbelianFactorGroup( G, N )}\\[2pt] 
+tests whether $G/N$ is abelian (without explicitly constructing the factor group).
+\item {\tt HasElementaryAbelianFactorGroup( G, N )}\\[2pt] 
+tests whether $G/N$ is elementary abelian (without explicitly constructing the factor group).
+{\codesize
+\begin{verbatim}
+gap> HasAbelianFactorGroup(g,n);                    # returns  false
+gap> HasAbelianFactorGroup(DerivedSubgroup(g),n);   # returns  true
+\end{verbatim}}
+\item {\tt CentralizerModulo( G, N, x )}\\[2pt] 
+computes the full preimage of the centralizer $C_{G/N} (\mathrm{x} \cdot N)$ in $G$ 
+(without necessarily constructing the factor group).
+{\codesize
+\begin{verbatim}
+gap> CentralizerModulo(g,n,(1,2));
+Group([ (3,4), (1,3)(2,4), (1,4)(2,3) ])
+\end{verbatim}}
+\end{itemize}
+
+\newpage
+
+\section{Some important subgroups}
+In the following, we refer to ``magmas'' which
+  are more general than groups.  If you are not familiar with magmas, just substitute
+  the word group for the word magma.
+  \begin{itemize}
+\item {\tt Normalizer( G, U )}
+\item {\tt Normalizer( G, g )}\\[2pt]
+Computes the normalizer $N_G(U)$, that is the stabilizer of $U$ under the conjugation
+action of $G$. The second form computes $N_G(\langle g \rangle)$.
+{\codesize
+\begin{verbatim}
+gap> Normalizer(g,Subgroup(g,[(1,2,3)]));  # returns Group([ (1,2,3), (2,3) ])
+\end{verbatim}}
+\item {\tt Centralizer( M, s )}
+\item {\tt Centralizer( M, S )}\\[2pt]
+For an element s of the magma M this operation returns the centralizer of s. 
+This is the domain of those elements m in M that commute with s.
+For a submagma S it returns the domain of those elements that commute with all elements s of S.
+\item {\tt Center( M )}
+Center returns the center of the magma M; i.e., the domain of those elements m in M that commute and
+associate with all elements of M. 
+For associative magmas we have that Center( M ) = Centralizer( M, M ).
+The center of a magma is always commutative.
+
+\item {\tt CommutatorSubgroup( G, H )}\\[2pt]
+If $G$ and $H$ are two groups of elements in the same family, this operation returns the group generated
+by all commutators $[g, h] = g h g^{-1} h^{-1}$ of elements $g\in G$ and $h\in H$; that is, the group
+$\langle [g, h] \mid g \in G,  h \in H\rangle$. % For example,
+{\codesize
+\begin{verbatim}
+gap> CommutatorSubgroup(Group((1,2,3),(1,2)),Group((2,3,4),(3,4)));
+Group([ (1,4)(2,3), (1,3,4) ])
+gap> Size(last);               # returns 12
+\end{verbatim}}
+\item {\tt DerivedSubgroup( G )}\\[2pt]
+The derived subgroup $G'$ of $G$ is the subgroup generated by all commutators of pairs of elements of $G$. It
+is normal in $G$ and the factor group $G/G'$ is the largest abelian factor group of $G$.
+If $G/H$ is abelian, then $G' \leq H$.
+\item {\tt Core( S, U )}\\[2pt]
+If S and U are groups of elements in the same family, this operation returns the core
+of U in S, that is the intersection of all S-conjugates of U.
+%For example,
+{\codesize
+\begin{verbatim}
+gap> g:=Group((1,2,3,4),(1,2));;
+gap> Core(g,Subgroup(g,[(1,2,3,4)]));    # returns Group(())
+\end{verbatim}}
+\item {\tt PCore( G, p )}\\[2pt]
+The p-core of G is the largest normal p-subgroup of G. It is the core of a p-Sylow
+subgroup of G.
+  \end{itemize}
+
+\newpage
+%\subsection{Sets of Subgroups\protect\footnotemark}
+%\footnotetext{{\it Ibid.}, sec.~37.19.}
+\subsection{Sets of Subgroups}
+\begin{itemize}
+\item {\tt ConjugacyClassSubgroups( $G$, $U$ )}\\
+generates the conjugacy class of subgroups of $G$ with representative $U$. This class
+is an external set, so functions such as {\tt Representative}, (which returns $U$),
+{\tt ActingDomain} (which returns $G$), {\tt StabilizerOfExternalSet} (which returns
+the normalizer of $U$), and {\tt AsList} work for it. \\[4pt]
+(The use of {\tt []} list access to select elements of the class is considered
+obsolete and will be removed in future versions. Use {\tt ClassElementLattice} instead.)
+{\codesize
+\begin{verbatim}
+gap> g:=Group((1,2,3,4),(1,2));;
+gap> IsNaturalSymmetricGroup(g);   # returns true
+gap> cl:=ConjugacyClassSubgroups( g, Subgroup(g,[(1,2)]) );
+Group( [ (1,2) ] )^G
+gap> Size(cl);                     # returns 6
+gap> ClassElementLattice( cl, 4 ); # returns Group([ (2,3) ])
+\end{verbatim}}
+
+\item {\tt IsConjugacyClassSubgroupsRep( obj )}
+\item {\tt IsConjugacyClassSubgroupsByStabilizerRep( obj )}\\
+Is the representation \gap\ uses for conjugacy classes of subgroups. It can be used to check whether an
+object is a class of subgroups. The second function {\tt ...ByStabilizerRep}
+is, in addition, an external orbit by stabilizer and will compute its elements via a
+transversal of the stabilizer. 
+
+\item {\tt ConjugacyClassesSubgroups( $G$ )}\\
+This attribute returns a list of all conjugacy classes of subgroups of the group
+$G$. It also is applicable for lattices of subgroups. The order in which the classes
+are listed depends on the method chosen by \gap. For each class of subgroups, a
+representative can be accessed using {\tt Representative}.%\footnote{{\it Ibid.}, sec.~28.3.7.}
+{\codesize
+\begin{verbatim}
+gap> ConjugacyClassesSubgroups( g );
+[ Group( () )^G, Group( [ (1,3)(2,4) ] )^G, Group( [ (3,4) ] )^G,
+Group( [ (2,4,3) ] )^G, Group( [ (1,4)(2,3), (1,3)(2,4) ] )^G,
+Group( [ (1,2)(3,4), (3,4) ] )^G, Group( [ (1,2)(3,4), (1,3,2,4) ] )^G,
+Group( [ (3,4), (2,4,3) ] )^G, Group( [ (1,3)(2,4), (1,4)(2,3), (1,2) ] )^G,
+Group( [ (1,3)(2,4), (1,4)(2,3), (2,4,3) ] )^G,
+Group( [ (1,3)(2,4), (1,4)(2,3), (2,4,3), (1,2) ] )^G ]
+\end{verbatim}}
+
+\item {\tt ConjugacyClassesMaximalSubgroups( $G$ )}\\
+returns the conjugacy classes of maximal subgroups of $G$. Representatives of the
+classes can be computed directly by {\tt MaximalSubgroupClassReps} (see next item).
+{\codesize
+\begin{verbatim}
+gap> ConjugacyClassesMaximalSubgroups( g );
+[ AlternatingGroup( [ 1 .. 4 ] )^G, Group( [ (1,2,3), (1,2) ] )^G,
+Group( [ (1,2), (3,4), (1,3)(2,4) ] )^G ]
+\end{verbatim}}
+
+\item {\tt MaximalSubgroupClassReps( $G$ )}
+returns a list of conjugacy representatives of the maximal subgroups of $G$.
+{\codesize
+\begin{verbatim}
+gap> MaximalSubgroupClassReps( g );
+[ Alt( [ 1 .. 4 ] ), Group([ (1,2,3), (1,2) ]),
+Group([ (1,2), (3,4), (1,3)(2,4) ]) ]
+\end{verbatim}}
+
+\item {\tt MaximalSubgroups( $G$ )}\\
+returns a list of all maximal subgroups of $G$. This may take up much space, therefore the command should
+be avoided if possible (e.g., by using {\tt ConjugacyClassesMaximalSubgroups( $G$ )}
+instead.)
+{\codesize
+\begin{verbatim}
+gap> MaximalSubgroups( Group((1,2,3),(1,2)) );
+[ Group([ (1,2,3) ]), Group([ (2,3) ]), Group([ (1,2) ]), Group([ (1,3) ]) ]
+\end{verbatim}}
+
+\item {\tt NormalSubgroups( $G$ )}\\
+returns a list of all normal subgroups of $G$.
+{\codesize
+\begin{verbatim}
+gap> g := SymmetricGroup( 4 );;  NormalSubgroups( g );
+[ Group(()), Group([ (1,4)(2,3), (1,3)(2,4) ]),
+Group([ (2,4,3), (1,4)(2,3), (1,3)(2,4) ]), Sym( [ 1 .. 4 ] ) ]
+\end{verbatim}}
+%\noindent The algorithm used for the computation of normal subgroups of permutation groups and pc groups is
+%described in [Hul98].
+
+\item {\tt MaximalNormalSubgroups( $G$ )}\\
+is a list containing those proper normal subgroups of the group $G$ that are maximal among the proper
+normal subgroups.
+{\codesize
+\begin{verbatim}
+gap> MaximalNormalSubgroups( g );
+[ Group([ (2,4,3), (1,4)(2,3), (1,3)(2,4) ]) ]
+\end{verbatim}}
+
+\item {\tt MinimalNormalSubgroups( $G$ )}\\
+is a list containing those nontrivial normal subgroups of the group $G$ that are minimal among the nontrivial
+normal subgroups.
+{\codesize
+\begin{verbatim}
+gap> MinimalNormalSubgroups( g );  # returns [ Group([ (1,4)(2,3), (1,3)(2,4) ]) ]
+\end{verbatim}}
+\end{itemize}
+\subsectionspace
+
+\subsection{Subgroup Lattice}
+There is a very useful \gap\ package called \xgap\ which produces nice graphical
+displays of subgroup lattices.  If you have \xgap\ installed
+and running, at the command prompt you can try, for example:
+{\codesize
+\begin{verbatim}
+gap> g := SymmetricGroup( 4 );;
+gap> GraphicSubgroupLattice( g );
+\end{verbatim}
+}  
+\begin{figure}[!hb]
+    \vspace{-4cm}
+    \includegraphics[height=10cm]{trivialS4.pdf}%
+    \includegraphics[height=10cm]{messyS4.pdf}%
+    \caption{The subgroups $(e)$ and $S_4$ (left),
+      and the full subgroup lattice $\Sub[S4]$ (right).}
+    \label{fig:S4s}
+\end{figure}
+\begin{figure}[!h]
+  \begin{center}
+    \vspace{-4cm}
+    \includegraphics[height=12cm]{neatS4.pdf}%
+    \caption{$\Sub[S4]$ as drawn by the \xgap\ program.}
+    \label{fig:neatS4}
+  \end{center}
+\end{figure}
+This opens a new \xgap\ graphics window showing just the two subgroups $(e)$ and
+$S_4$ -- Figure~\ref{fig:S4s} (left).  In
+the {\tt Subgroups} menu of this new window, select {\tt All Subgroups}.  This
+fills in the subgroup lattice $\Sub[S_4]$ (in a rather messy way) -- Figure~\ref{fig:S4s}
+(right).  You can then move the subgroups around to make it look nicer --
+Figure~\ref{fig:neatS4}. 
+
+A couple of nice features of the \xgap\ display of the
+subgroup lattice is that conjugacy classes of subgroups are glued together, and
+their indices are displayed.  Also, normal subgroups are drawn as diamonds, while
+non-normal subgroups appear as circles.  Occasionally, when the group is very
+large, \xgap\ does not waste time checking which subgroups are normal, and
+instead displays them with squares.
+
+We now list some subgroup lattice commands that are available in the standard
+\gap\ distribution.  (These do not require \xgap.)
+
+\begin{itemize}
+\item {\tt LatticeSubgroups( $G$ )}\\
+computes the lattice of subgroups of the group $G$. This lattice has the conjugacy
+classes of subgroups as attribute {\tt ConjugacyClassesSubgroups} and permits one to
+test maximality/minimality relations.
+{\codesize
+\begin{verbatim}
+gap> g := SymmetricGroup( 4 );;  l := LatticeSubgroups( g );
+<subgroup lattice of Sym( [ 1 .. 4 ] ), 11 classes, 30 subgroups>
+gap> ConjugacyClassesSubgroups( l );
+[ Group( () )^G, Group( [ (1,3)(2,4) ] )^G, Group( [ (3,4) ] )^G,
+Group( [ (2,4,3) ] )^G, Group( [ (1,4)(2,3), (1,3)(2,4) ] )^G,
+Group( [ (1,2)(3,4), (3,4) ] )^G, Group( [ (1,2)(3,4), (1,3,2,4) ] )^G,
+Group( [ (3,4), (2,4,3) ] )^G, Group( [ (1,3)(2,4), (1,4)(2,3), (1,2) ] )^G,
+Group( [ (1,3)(2,4), (1,4)(2,3), (2,4,3) ] )^G,
+Group( [ (1,3)(2,4), (1,4)(2,3), (2,4,3), (1,2) ] )^G ]
+\end{verbatim}}
+\item {\tt ClassElementLattice( C, n )}\\
+For a class C of subgroups, obtained by a lattice computation, this operation returns the n-th conjugate
+subgroup in the class.
+{\it Because of other methods installed,} {\tt AsList(C)} {\it can give a different arrangement of the class
+elements!}
+
+\item {\tt MaximalSubgroupsLattice( lat )}\\
+For a lattice {\tt lat} of subgroups this attribute contains the maximal subgroup relations among the subgroups
+of the lattice. It is a list, corresponding to the ConjugacyClassesSubgroups of the lattice, each entry giving
+a list of the maximal subgroups of the representative of this class. Every maximal subgroup is indicated by
+a list of the form {\tt [cls, nr]} which means that the {\tt nr}-th subgroup in class
+number {\tt cls} is a maximal subgroup of the representative.
+{\it The number} {\tt nr} {\it corresponds to access via {\tt ClassElementLattice} and not
+necessarily the} {\tt AsList} {\it arrangement!}
+{\codesize
+\begin{verbatim}
+gap> MaximalSubgroupsLattice(l);
+[ [ ], [ [ 1, 1 ] ], [ [ 1, 1 ] ], [ [ 1, 1 ] ],
+[ [ 2, 1 ], [ 2, 2 ], [ 2, 3 ] ], [ [ 3, 1 ], [ 3, 6 ], [ 2, 3 ] ],
+[ [ 2, 3 ] ], [ [ 4, 1 ], [ 3, 1 ], [ 3, 2 ], [ 3, 3 ] ],
+[ [ 7, 1 ], [ 6, 1 ], [ 5, 1 ] ],
+[ [ 5, 1 ], [ 4, 1 ], [ 4, 2 ], [ 4, 3 ], [ 4, 4 ] ],
+[ [ 10, 1 ], [ 9, 1 ], [ 9, 2 ], [ 9, 3 ], [ 8, 1 ], [ 8, 2 ], [ 8, 3 ],
+[ 8, 4 ] ] ]
+gap> last[6];   # returns [ [ 3, 1 ], [ 3, 6 ], [ 2, 3 ] ]
+gap> u1:=Representative(ConjugacyClassesSubgroups(l)[6]);
+Group([ (1,2)(3,4), (3,4) ])
+gap> u2:=ClassElementLattice(ConjugacyClassesSubgroups(l)[3],1);;
+gap> u3:=ClassElementLattice(ConjugacyClassesSubgroups(l)[3],6);;
+gap> u4:=ClassElementLattice(ConjugacyClassesSubgroups(l)[2],3);;
+gap> IsSubgroup(u1,u2); IsSubgroup(u1,u3); IsSubgroup(u1,u4);
+# returns true, true, true
+\end{verbatim}}
+\item {\tt MinimalSupergroupsLattice( lat )}\\
+For a lattice {\tt lat} of subgroups this attribute contains the minimal supergroup relations among the subgroups
+of the lattice. It is a list, corresponding to the ConjugacyClassesSubgroups of the lattice, each entry giving
+a list of the minimal supergroups of the representative of this class. As above, every minimal supergroup is indicated
+by a list of form {\tt [cls, nr]} -- 
+the {\tt nr}-th subgroup in class number {\tt cls} is a minimal supergroup of the representative.
+%{\it The number} {\tt nr} {\it corresponds to access via {\tt ClassElementLattice} and not
+%necessarily the} {\tt AsList} {\it arrangement!}
+{\codesize
+\begin{verbatim}
+gap> MinimalSupergroupsLattice(l);
+[ [ [ 2, 1 ], [ 2, 2 ], [ 2, 3 ], [ 3, 1 ], [ 3, 2 ], [ 3, 3 ], [ 3, 4 ],
+[ 3, 5 ], [ 3, 6 ], [ 4, 1 ], [ 4, 2 ], [ 4, 3 ], [ 4, 4 ] ],
+[ [ 5, 1 ], [ 6, 2 ], [ 7, 2 ] ], [ [ 6, 1 ], [ 8, 1 ], [ 8, 3 ] ],
+[ [ 8, 1 ], [ 10, 1 ] ], [ [ 9, 1 ], [ 9, 2 ], [ 9, 3 ], [ 10, 1 ] ],
+[ [ 9, 1 ] ], [ [ 9, 1 ] ], [ [ 11, 1 ] ], [ [ 11, 1 ] ], [ [ 11, 1 ] ],
+[ ] ]
+gap> last[3];   # returns  [ [ 6, 1 ], [ 8, 1 ], [ 8, 3 ] ]
+gap> u5:=ClassElementLattice(ConjugacyClassesSubgroups(l)[8],1);
+Group([ (3,4), (2,4,3) ])
+gap> u6:=ClassElementLattice(ConjugacyClassesSubgroups(l)[8],3);
+Group([ (1,3), (1,3,4) ])
+\end{verbatim}}
+\end{itemize}
+
+\newpage
+
+\section{Subgroup series\protect\footnotemark} 
+\footnotetext{See also the \gap\ Manual~\cite{gapmanual}, page 370.}
+In group theory many subgroup series are considered, and \gap\ provides commands to
+compute them. 
+In the following sections, there is always a series 
+\[
+G = U_1 > U_2 > \cdots > U_m = \langle 1 \rangle
+\]
+of subgroups considered.
+A series also may stop without reaching $G$ or $\langle 1 \rangle$.\\[4pt] 
+A series is called \emph{subnormal} if every $U_{i+1}$ is normal in $U_i$.\\[4pt] 
+A series is called \emph{normal} if every $U_i$ is normal in $G$.\\[4pt] 
+A series of normal subgroups is called \emph{central} if $U_i/U_{i+1}$ is central in 
+$G/U_{i+1}$.\\[4pt] 
+We call a series \emph{refinable} if intermediate subgroups can be added to the
+series without destroying the properties of the series.
+Unless explicitly declared otherwise, all subgroup series are descending. That is, they are stored in decreasing
+order.
+\begin{itemize}
+\item {\tt ChiefSeries( G )}\\[2pt] 
+is a series of normal subgroups of G which cannot be refined further. That is, there
+is no normal subgroup $N \subnormal G$ with $U_i > N > U_{i+1}$. 
+This attribute returns one chief series (of potentially many possibilities). %For example,
+{\codesize
+\begin{verbatim}
+gap> g:=Group((1,2,3,4),(1,2));;
+gap> ChiefSeries(g);
+[ Group([ (1,2,3,4), (1,2) ]), Group([ (2,4,3), (1,4)(2,3), (1,3)(2,4) ]),
+Group([ (1,4)(2,3), (1,3)(2,4) ]), Group(()) ]
+\end{verbatim}}
+\item {\tt ChiefSeriesThrough( G, L )}\\[2pt] 
+is a chief series of the group G going through the normal subgroups in the list L. Here
+L must be a list of normal subgroups of G contained in each other, sorted by
+descending size. This attribute returns one chief series (of potentially many possibilities).
+\item {\tt ChiefSeriesUnderAction( H, G )}\\[2pt] 
+returns a series of normal subgroups of G which are invariant under H such that the series cannot be
+refined any further. G must be a subgroup of H. This attribute returns one such series (of potentially many
+possibilities).
+\item {\tt SubnormalSeries( G, U )}\\[2pt] 
+If U is a subgroup of G this operation returns a subnormal series that descends from G to a subnormal
+subgroup V containing U.  If U is subnormal, V=U.  %For example,
+{\codesize
+\begin{verbatim}
+gap> s:=SubnormalSeries(g,Group((1,2)(3,4)));
+[ Group([ (1,2,3,4), (1,2) ]), Group([ (1,2)(3,4), (1,4)(2,3) ]),
+Group([ (1,2)(3,4) ]) ]
+\end{verbatim}}
+\item {\tt CompositionSeries( G )}\\[2pt] 
+A \emph{composition series} is a subnormal series which cannot be refined. This attribute returns one composition
+series (of potentially many possibilities).
+\item {\tt DisplayCompositionSeries( G )}\\[2pt] 
+Displays a composition series of G in a nice way, identifying the simple factors.
+% For example,
+{\codesize
+\begin{verbatim}
+gap> CompositionSeries(g);
+[ Group([ (3,4), (2,4,3), (1,4)(2,3), (1,3)(2,4) ]),
+Group([ (2,4,3), (1,4)(2,3), (1,3)(2,4) ]),
+Group([ (1,4)(2,3), (1,3)(2,4) ]), Group([ (1,3)(2,4) ]), Group(()) ]
+gap> DisplayCompositionSeries(Group((1,2,3,4,5,6,7),(1,2)));
+G (2 gens, size 5040)
+| Z(2)
+S (5 gens, size 2520)
+| A(7)
+1 (0 gens, size 1)
+\end{verbatim}}
+\item {\tt DerivedSeriesOfGroup( G )}\\[2pt] 
+The derived series of a group is obtained by $U_{i+1} = U_i'$. It stops if $U_i$ is
+perfect.\footnote{Recall, a group $G$ is called \emph{perfect} if $G' = G$.
+  Equivalently, $G$ has no nontrivial abelian factor group $G/H$ (since $G/G'$ is the
+  largest abelian factor group, and, if $G/H$ is abelian, then $G'\leq H$).}
+\item {\tt DerivedLength( G )}\\[2pt] 
+The \emph{derived length} of a group is the number of steps in the derived series. (As there is always the group, it
+is the series length minus 1.)
+{\codesize
+\begin{verbatim}
+gap> List(DerivedSeriesOfGroup(g),Size);
+[ 24, 12, 4, 1 ]
+gap> DerivedLength(g);      # returns 3
+\end{verbatim}}
+\item {\tt AscendingChain( G, U )}\\[2pt] 
+This function computes an ascending chain of subgroups from U to G. This chain is given as a list whose
+first entry is U and the last entry is G. The function tries to make the links in this chain small.
+The option {\tt refineIndex} can be used to give a bound for refinements of steps to avoid \gap\ trying to enforce
+too small steps.
+\item {\tt IntermediateGroup( G, U )}\\[2pt] 
+This routine tries to find a subgroup $E$ of $G$, such that $G > E > U$. If $U$ is maximal,
+it returns {\tt fail}. This is done by finding minimal blocks for the operation of $G$ on the right cosets of $U$.
+\item {\tt IntermediateSubgroups( G, U )}\\[2pt] 
+returns a list of all subgroups of G that properly contain U; that is all subgroups between G and U. It
+returns a record with components {\tt subgroups} which is a list of these subgroups as well as a component
+{\tt inclusions} which lists all maximality inclusions among these subgroups. A maximality inclusion is given as
+a list {\tt [i,j]} indicating that subgroup number {\tt i} is a maximal subgroup
+of subgroup number {\tt j}, the numbers 0 and 1+length({\tt subgroups}) are used
+to denote U and G respectively.
+(See Section~\ref{sec:lists} below for a concrete example.)
+\end{itemize}
+
+\newpage
+
+\section{Mappings and relations in GAP\protect\footnotemark}
+\label{sec:mappings}
+\footnotetext{See also the \gap\ Manual~\cite{gapmanual}, Chapter 31.}
+%As usual, an {\it ordered pair} $(x, y)$ is defined to be the set $\{\{x\}, \{x, y\}\}$.
+%A {\it relation} is a set of ordered pairs; i.e.~a relation $\sR$ is simply a subset
+%of a cartesian product.
+As usual, a {\it relation} is a set of ordered pairs; i.e.~a subset of a Cartesian product.
+For a relation $\sR$, we define the {\it domain} of $\sR$ (denoted $\dom \sR$) and
+the {\it range} of $\sR$ ($\ran \sR$)
+%and the {\it field} of $\sR$ ($\fld \sR$) 
+by
+\begin{align*}
+x \in  \dom \sR \quad &\Leftrightarrow \quad \exists y \; (x,y) \in \sR,\\
+x \in\ran \sR  \quad &\Leftrightarrow \quad \exists t \; (t,x) \in \sR,\\
+%\fld \sR &= \dom \sR \cup \ran \sR.
+\end{align*}
+In other words,
+\[
+\dom \sR = \{x \mid \exists \, y \; (x,y)\in \sR\}\quad \text{ and } \quad
+\ran \sR = \{y \mid \exists \, x \; (x,y)\in \sR\}.
+\]
+A {\it function} is a relation $\sF$ such that for each $x$ in $\dom \sF$ there
+is only one $y$ such that $(x, y) \in \sF$.
+\\[5pt]
+In \gap, relations are called \emph{generalized mapping}, and functions are called \emph{mappings}.
+Most \gap\ operations are declared for general mappings.
+A general mapping $m$ in \gap\ is described by its source $S$, its range $R$, and
+a subset $\sR$ of the direct product $S \times R$, which is called the
+underlying relation of $m$.  The objects $S, R$, and $\sR$ are \emph{generalized
+  domains}.\footnote{{\it Ibid.}, sec.~12.4.} 
+The corresponding attributes for general mappings are {\tt Source}, {\tt Range}, and
+{\tt UnderlyingRelation}.
+\\[5pt]
+For each $s \in S$, the set $\{r \in R \mid (s, r ) \in \sR\}$ is called the set of
+{\bf images} of $s$. 
+Analogously, for $r \in R$, the set $\{s \in S \mid (s, r ) \in \sR\}$ is called the
+set of {\bf preimages} of $r$. 
+\\[5pt]
+The {\bf ordering} of general mappings via $<$ is defined by the ordering of source,
+range, and underlying relation.  Specifically, if the {\tt Source} and {\tt Range} domains of
+{\it map1} and {\it map2} are the same, then one considers the union of the preimages
+of {\it map1} and {\it map2} as a strictly ordered set. 
+The smaller of {\it map1} and {\it map2} is the one 
+whose image is smaller on the first point of this sequence where they differ.
+\\[5pt]
+For mappings which preserve an algebraic structure, a {\bf kernel} is defined. 
+The operation to compute this kernel is called differently, depending on the
+structure preserved.\footnote{{\it Ibid.}, sec.~31.6.  Some technical
+  details of general mappings are described in sec.~31.12.} 
+\\[5pt]
+The following is a list of commands for creating general mappings and functions, as
+well as some important special cases.\footnote{{\it Ibid.}, sec.~31.1.}
+\begin{itemize}
+\item {\tt GeneralMappingByElements( S, R, elms )}\\
+is the general mapping with source {\tt S} and range {\tt R}, and with underlying relation consisting of the tuples
+collection {\tt elms}.
+\item {\tt MappingByFunction( S, R, fun )}
+\item {\tt MappingByFunction( S, R, fun, invfun )}\\
+returns a mapping {\tt map} with source {\tt S} and range {\tt R}, such that each element
+{\tt s} of {\tt S} is mapped to the element {\tt fun( s )}, where {\tt fun} is
+already a \gap\ function.
+\\[4pt]
+If the argument {\tt invfun} is bound, then the resulting {\tt map} is a bijection
+between {\tt S} and {\tt R}, and the preimage of each element {\tt r} of {\tt R} is
+given by {\tt invfun( r )}, where {\tt invfun} is a \gap\ function.
+\item {\tt InverseGeneralMapping( map )}\\
+The inverse of a general mapping {\tt map} is the general mapping whose underlying relation
+contains a pair $(r, s)$ if and only if the underlying relation of {\tt map} contains the pair $(s, r)$.
+\\[4pt]
+Note that the inverse general mapping of {\tt map} is, in general, only a general
+mapping. If {\tt map} is known to be bijective, then its inverse general mapping will
+be known to be a mapping. In this case, the command {\tt Inverse( map )} also works.
+\item  {\tt ZeroMapping( S, R )}\\
+A zero mapping is a total general mapping that maps each element of its source to the zero element of its
+range. (Each mapping with empty source is a zero mapping.)
+\item {\tt IdentityMapping( D )}\\
+is the bijective mapping with source and range equal to the collection {\tt D}, which
+maps each element of {\tt D} to itself.
+\item  {\tt Embedding( S, T )}
+\item  {\tt Embedding( S, i )}\\
+returns the embedding of the domain {\tt S} in the domain {\tt T}, or in the second form, some domain indexed by
+the positive integer {\tt i}. The precise natures of the various methods are
+described elsewhere.\footnote{In the \gap\ Manual: for Lie algebras, see 61.1.3; for
+  group products, see 47.6; for a general description, or for examples see 47.1 for
+  direct products, 47.2 for semidirect products, or 47.4 for wreath products; or for
+  magma rings see 63.3.} 
+\item  {\tt Projection( S, T )}
+\item  {\tt Projection( S, i )}
+\item  {\tt Projection( S )}\\
+returns the projection of the domain {\tt S} onto the domain {\tt T}, or in the
+second form, some domain indexed by the positive integer {\tt i}, or in the third
+form some natural subdomain of {\tt S}.
+Various methods are defined, and the precise natures of the various methods are
+described elsewhere.\footnote{{\it Loc.~cit.}}
+\item  {\tt RestrictedMapping( map, subdom )}\\
+If {\tt subdom} is a subdomain of the source of the general mapping {\tt map}, this
+operation returns the restriction of {\tt map} to {\tt subdom}.
+\end{itemize}
+\subsectionspace
+
+\subsection{Properties and Attributes of (General) Mappings}
+\label{sec:properties-of-mappings}
+\begin{itemize}
+\item  {\tt IsTotal( $m$ )}\\
+is true if each element in the source $S$ of the general mapping $m$ has images 
+-- i.e., $s^{m} \neq \emptyset,$ for all $s \in S$ -- 
+and false otherwise.
+\item  {\tt IsSingleValued( $m$ )}\\
+is true if each element in the source $S$ of the general mapping $m$ has at most
+one image -- i.e., $|s^{m}| \leq 1$, for all $s \in S$ -- and false otherwise.
+%\\[5pt]
+%Equivalently, {\tt IsSingleValued( $m$ )} is true if and only if the preimages of
+%different elements in the range of $m$ are disjoint.
+\item  {\tt IsMapping( $m$ )}\\
+A {\bf mapping} $m$ is a general mapping that assigns to each element $x$ of
+its source a unique element {\tt Image( $m, x$ )} of its range.
+\\[4pt]
+Equivalently, the general mapping $m$ is a mapping if and only if it is total
+and single-valued.
+\item {\tt IsInjective( $m$ )}\\
+is true if the images of different elements in the source $S$ of the general mapping
+$m$ are disjoint -- i.e., $x^m \cap y^m = \emptyset$, for $x \neq y \in S$ -- and false otherwise.
+\item {\tt IsSurjective( $m$ )}\\
+is true if each element in the range $R$ of the general mapping $m$ has preimages in
+the source $S$ of $m$ -- i.e., $\{s \in  S \mid x \in s^m \} \neq \emptyset$, for all
+$x \in R$ -- and false otherwise.
+\item {\tt IsBijective( $m$ )}\\
+A general mapping $m$ is bijective if and only if it is an injective and surjective mapping.
+\item {\tt Range( $m$ )}
+\item {\tt Source( $m$ )}
+\item {\tt UnderlyingRelation( $m$ )}\\
+The underlying relation of a general mapping $m$ is the domain of pairs $(s, r)$,
+with $s$ in the source and $r$ in the range of $m$, and 
+{\tt $r \in $ ImagesElm( $m, s$ )}.
+\item {\tt UnderlyingGeneralMapping( $\sR$ )}\\
+attribute for underlying relations of general mappings
+\end{itemize}
+\subsectionspace
+
+\subsection{Images under Mappings}
+\begin{itemize}
+\item {\tt ImagesSource( $m$ )}\\
+is the set of images of the source of the general mapping $m$.
+ImagesSource delegates to ImagesSet, it is introduced only to store the image of $m$ as attribute value.
+\item {\tt ImagesRepresentative( $m$, $x$ )}\\
+If $x$ is an element of the source of the general mapping $m$ then ImagesRepresentative returns either
+a representative of the set of images of $x$ under $m$ or fail, the latter if and only if $x$ has no images
+under $m$.
+Anything may happen if $x$ is not an element of the source of $m$.
+\item {\tt ImagesElm( $m$, $x$ )}\\
+If $x$ is an element of the source of the general mapping $m$ then {\tt ImagesElm} returns the set of all images
+of $x$ under $m$.
+\\[4pt]
+Anything may happen if $x$ is not an element of the source of $m$.
+\item {\tt ImagesSet( $m$, $X$ )}\\
+If $X$ is a subset of the source of the general mapping $m$ then ImagesSet returns the set of all images
+of $X$ under $m$.
+\\[4pt]
+Anything may happen if $X$ is not a subset of the source of $m$.
+\item {\tt ImageElm( $m$, $x$ )}\\
+If $x$ is an element of the source of the total and single-valued mapping $m$ then ImageElm returns the
+unique image of $x$ under map.
+Anything may happen if $x$ is not an element of the source of map.
+\item {\tt Image( $m$ )}
+\item {\tt Image( $m$, $x$ )}
+\item {\tt Image( $m$, $X$ )}\\
+{\tt Image( $m$ )} is the image of the general mapping $m$, i.e., the subset of
+elements of the range of $m$ that are actually values of map. 
+Note that in this case the argument may also be multi-valued.
+\\[4pt]
+{\tt Image( $m$, $x$ )} is the image of the element $x$ of the source of the mapping $m$ under $m$, i.e., the
+unique element of the range to which $m$ maps $x$. This can also be expressed as \\
+$x$ \verb.^. $m$. 
+Note that $m$ must be total and single valued, a multi-valued general mapping is not
+allowed.
+\\[4pt]
+{\tt Image( $m$, $X$ )} is the image under $m$ of the subset $X$ of the source of
+the mapping $m$; i.e., the
+subset of the range to which $m$ maps elements of $X$. Here, $X$ may be a proper set
+or a domain. 
+The result will be either a proper set or a domain. In this case $m$ may also be
+multi-valued. 
+(If $X$ and the result are lists then the positions of entries do not, in general, correspond.)
+{\tt Image} delegates to {\tt ImagesSource} when called with one argument, and to
+{\tt ImageElm} resp.~{\tt ImagesSet} when called with two arguments.
+If the second argument is not an element or a subset of the source of the first
+argument, an error is signalled. 
+\item {\tt Images( $m$ )}
+\item {\tt Images( $m$, $x$ )}
+\item {\tt Images( $m$, $X$ )}\\
+{\tt Images( $m$ )} is the image of the general mapping $m$, i.e., the subset of elements of the range of $m$
+that are actually values of $m$.
+\\[4pt]
+{\tt Images( $m$, $x$ )} is the set of images of the element $x$ of the source of the general mapping $m$
+under $m$, i.e., the set of elements of the range to which $m$ maps $x$.
+\\[4pt]
+{\tt Images( $m$, $X$ )} is the set of images of the subset $X$ of the source of the general mapping $m$ under
+$m$, i.e., the subset of the range to which $m$ maps elements of $X$ . $X$ may be a proper set or a domain.
+The result will be either a proper set or a domain. (If $X$ and the result are lists then the positions of
+entries do in general not correspond.)
+{\tt Images} delegates (to {\tt ImagesSource}, {\tt ImagesElm}, and {\tt ImagesSet}) in the
+same way that {\tt Image} delegates.
+\end{itemize}
+
+\newpage
+
+\section{Groups Products\protect\footnotemark}  
+\footnotetext{See also the \gap\ Manual~\cite{gapmanual}, Chapter 47.}
+\noindent This section describes the various group product constructions that are possible in \gap. 
+\\[5pt]
+For some group products methods are available only if both factors are
+given in the same representation or only for certain types of groups, such as
+permutation groups and pc groups, when the product can be naturally represented as a
+group of the same kind. 
+\\[5pt]
+In general, \gap\ does not guarantee that a product of two groups will be in a
+particular representation.\footnote{Exceptions are {\tt
+    WreathProductImprimitiveAction} and {\tt WreathProductProductAction} which
+  are constructions that make sense only for permutation groups.\footnote{{\it
+      Ibid.}, sec.~47.4.1.}}  
+However, \gap\ will try to choose an efficient representation, so products of
+permutation groups or pc groups often will be represented as a group of the same kind
+again. 
+Therefore, the only guaranteed way to relate a product to its factors is via the
+embedding and projection homomorphisms (sec.~\ref{sec:embedd-proj-group} below).
+
+\subsection{Direct Products}
+The direct product of groups is the Cartesian product of the groups (considered as element sets) with
+component-wise multiplication.
+
+\begin{itemize}
+\item {\tt DirectProduct( G, H )}
+\item {\tt DirectProductOp( list, expl )}\\[2pt] 
+These functions construct the direct product of the groups given as arguments. 
+{\tt DirectProduct} takes an arbitrary positive number of arguments and calls the
+operation {\tt DirectProductOp}, which takes exactly two arguments, namely a nonempty
+list of groups and one of these groups. (This somewhat strange syntax allows the
+method selection to choose a reasonable method for special cases, e.g., if all groups
+are permutation groups or pc groups.)
+\\[5pt]
+\gap\ will try to choose an efficient representation for the direct product. For example the direct product
+of permutation groups will be a permutation group again and the direct product of pc groups will be a pc
+group.
+\\[5pt]
+If the groups are in different representations a generic direct product will be formed which may not be
+particularly efficient for many calculations. Instead it may be worth to convert all factors to a common
+representation first, before forming the product.
+\\[5pt]
+For a product {\tt P} the operation {\tt Embedding( P, nr )} returns the
+homomorphism embedding the {\tt nr}-th factor into {\tt P}. The operation
+{\tt Projection( P, nr )} gives the projection of {\tt P} onto the {\tt nr}-th factor
+(sec.~\ref{sec:embedd-proj-group}).
+\end{itemize}
+\subsectionspace
+
+\noindent {\it Examples: some basic direct products and their Hasse diagrams.}
+\begin{enumerate}
+\item 
+Let 
+{\tt s3 := $S_3$} and {\tt a3 := $A_3$}, 
+the symmetric and alternating groups on three letters, resp.
+\begin{figure}[!ht]\begin{center}
+\vspace{-8cm}
+\includegraphics[height=20cm]{s3a3new.pdf}%
+\caption{Hasse diagram of $\Sub[S_3 \times A_3]$ drawn by the \xgap\ program.}
+\label{fig:s3a3}
+\end{center}\end{figure}
+{\codesize
+\begin{verbatim}
+gap> s3 := SymmetricGroup( 3 );;  a3 := AlternatingGroup( 3 );;
+
+\end{verbatim}}
+\noindent Of course, $S_3$ has 6 elements, 
+$\{ e, (2,3), (1,2), (1,2,3), (1,3,2), (1,3) \}$, 
+and is generated by $(1,2)$ and $(1,2,3)$; i.e., $S_3 = \langle (1,2),
+(1,2,3)\rangle$.
+Its normal subgroup $A_3$ has three elements $\{ e, (1,2,3), (1,3,2)\}$, and
+$A_3 = \<(1,2,3)\>$.   Thus, we could have defined {\tt s3} and 
+{\tt a3} in \gap\ as follows:
+{\codesize
+\begin{verbatim}
+gap> s3 := Group( (1,2), (1,2,3) );;  a3 := Group( (1,2,3) );;
+
+\end{verbatim}}
+\noindent Now define the direct product group {\tt s3a3 := $S_3 \times A_3$}, which has 
+$|S_3|\cdot |A_3| = 18$ elements.
+{\codesize
+\begin{verbatim}
+gap> s3a3 := DirectProduct( s3, a3 );  # returns Group([ (1,2), (1,2,3), (4,5,6) ])
+gap> Order( s3a3 );                    # returns 18
+\end{verbatim}
+\noindent (If we had defined {\tt a3s3 := DirectProduct( a3, s3 );}, the result
+would have been \\
+{\tt Group([ (1,2,3), (4,5), (4,5,6) ])}, which is, of course, isomorphic to
+{\tt s3a3}.)}
+\\[5pt]
+\noindent If you are using the \xgap\ package, an extension of \gap, you can see the
+Hasse diagram of the subgroup lattice of a group with the command 
+{\tt GraphicSubgroupLattice}.
+For example, the following command draws the subgroup lattice of $S_3 \times A_3$
+(Figure~\ref{fig:s3a3}):\footnote{When you execute the 
+{\tt GraphicSubgroupLattice} command, the initial result is a
+diagram showing only the trivial subgroups (e.g., $(e)$ and $S_3\times A_3$).  
+To see the full subgroup lattice, you must select {\tt All Subgroups} from the 
+{\tt Subgroups} menu.} 
+{\codesize
+\begin{verbatim}
+gap> GraphicSubgroupLattice( s3a3 );
+
+\end{verbatim}}
+\noindent \xgap\ depicts normal subgroups with diamonds and non-normal subgroups with circles.  
+Conjugacy classes of subgroups are grouped together.
+(Thus, a normal subgroup appears by itself.)
+
+In the lattice in Figure~\ref{fig:s3a3}, the
+subgroup of index two is the normal subgroup $A_3 \times A_3$. 
+Now, $A_3$ has no proper nontrivial subgroups (and thus $\Sub[A_3]$ is just the
+two element chain).  Nonetheless, it is clear from the diagram that the subgroup
+lattice $\Sub[A_3 \times A_3]$ is isomorphic to $M_4$ (cf.~$\Sub[\Z_2 \times \Z_2]
+\cong M_3$).
+\\[6pt]
+{\bf Remark:} $\Sub[A_3 \times A_3] \cong M_4 \cong \Sub[S_3]$.  Indeed,
+\begin{itemize}
+\item It is well-known that $\Sub[G]\cong M_4$ iff $G$ is (isomorphic to) $C_3\times C_3$ or $D_3$.
+\item  $S_3$ is isomorphic to the dihedral group $D_3$ of order 6, the symmetries of
+  an equilateral triangle (three reflections and three rotations; some authors refer
+  to $D_3$ as $D_6$.)  We can easily check by hand that $S_3 \cong D_3$, but \gap\
+  quickly confirms this fact as follows:
+{\codesize
+\begin{verbatim}
+gap> s3 := SymmetricGroup(3);    # returns Sym( [ 1 .. 3 ] )
+gap> d3 := DihedralGroup(6);     # returns <pc group of size 6 with 2 generators>
+gap> IsDihedralGroup(s3);        # returns true
+\end{verbatim}}
+\item $A_3$ is isomorphic to $C_3$.  This is obvious, but let's check it anyway using GAP:
+{\codesize
+\begin{verbatim}
+gap> a3 := AlternatingGroup(3);  # returns Alt( [ 1 .. 3 ] )
+gap> Elements(a3);               # returns [ (), (1,2,3), (1,3,2) ]
+gap> IsCyclic(a3);               # returns true
+
+\end{verbatim}}
+\end{itemize}
+
+\item For our next example, we let {\tt a3 := $A_3$} and {\tt a4 := $A_4$}, the
+alternating groups on three and four letters (resp.), and let 
+{\tt c2 := $\Z_2$}, the cyclic group or order 2. 
+{\codesize
+\begin{verbatim}
+gap> a3 := AlternatingGroup( 3 );;  a4 := AlternatingGroup( 4 );;
+gap> c2 := CyclicGroup(2);
+<pc group of size 2 with 1 generators>
+
+gap> a4c2 := DirectProduct( a4, c2 );
+<group of size 24 with 3 generators>
+
+gap> a4a3 := DirectProduct( a4, a3 );
+Group([ (1,2,3), (2,3,4), (5,6,7) ])
+
+\end{verbatim}}
+\begin{figure}[h!]\begin{center}
+\vspace{-8cm}
+\includegraphics[height=20cm]{a4a3new.pdf}%
+\caption{Hasse diagram of $\Sub[A_4 \times A_3]$ drawn by the \xgap\ program.}
+\label{fig:a4a3}
+\end{center}\end{figure}
+\begin{figure}[h!]\begin{center}
+\vspace{-8cm}
+\includegraphics[height=20cm]{a4c2new.pdf}%
+\caption{Hasse diagram of $\Sub[A_4 \times \Z_2]$ drawn by the \xgap\ program.}
+\label{fig:a4c2}
+\end{center}\end{figure}
+\begin{figure}[h!]\begin{center}
+\vspace{-8cm}
+\includegraphics[height=18cm]{v4c2new.pdf}%
+\caption{Hasse diagram of $\Sub[V_4 \times \Z_2]$ drawn by the \xgap\ program.}
+\label{fig:v4c2}
+\end{center}\end{figure}
+\noindent If you are using \xgap, the subgroup lattices 
+$\Sub[A_4 \times A_3]$ and $\Sub[A_4 \times \Z_2]$ are displayed with
+{\tt GraphicSubgroupLattice}.  
+{\codesize
+\begin{verbatim}
+gap> GraphicSubgroupLattice( a4a3 );
+gap> GraphicSubgroupLattice( a4c2 );
+
+\end{verbatim}}
+
+\noindent In the subgroup lattice $\Sub[A_4 \times \Z_2]$ (Figure~\ref{fig:a4c2}), 
+consider the (maximal) normal subgroup of index 3; 
+i.e., the diamond labelled 24.  
+The diagram makes clear that this is the subgroup 
+$V_4 \times \Z_2$, where $V_4$ is the Klein 4 group.  
+It's hard to see exactly what's happening below this subgroup in the full 
+$\Sub[A_4 \times \Z_2]$ lattice,
+but we can get a handle on $V_4 \times \Z_2$, and draw its subgroup lattice, 
+$\Sub[V_4 \times \Z_2]$ (Figure~\ref{fig:v4c2}), with the following commands:
+{\codesize
+\begin{verbatim}
+gap> cclsa4 := ConjugacyClassesSubgroups(a4);
+[ Group( () )^G, Group( [ (1,2)(3,4) ] )^G, Group( [ (2,4,3) ] )^G, 
+  Group( [ (1,3)(2,4), (1,2)(3,4) ] )^G, 
+  Group( [ (1,3)(2,4), (1,2)(3,4), (2,4,3) ] )^G ]
+gap> v4 := Representative(cclsa4[4]);
+Group([ (1,3)(2,4), (1,2)(3,4) ])
+gap> Order(v4);     # returns 4 
+gap> IsCyclic(v4);  # returns false (v4 is, indeed, the Klein 4 group)
+gap> v4c2 := DirectProduct(v4,c2);
+<group of size 8 with 3 generators>
+gap> GraphicSubgroupLattice(v4c2);
+\end{verbatim}}
+\end{enumerate}
+
+
+
+\newpage
+
+
+\newpage 
+
+\subsection{Embeddings and Projections}
+\label{sec:embedd-proj-group}
+The relation between a group product and its factors is provided via homomorphisms, the embeddings in
+the product and the projections from the product. Depending on the kind of product only some of these are
+defined.
+\begin{itemize}
+\item {\tt Embedding( P, nr )}\\[2pt]
+returns the {\tt nr}-th embedding in the group product {\tt P}. 
+The actual meaning of this embedding is described in the section for the appropriate product.
+\item {\tt Projection( P[, nr] )}\\[2pt]
+returns the ({\tt nr}-th) projection of the group product {\tt P}. 
+The actual meaning of the projection returned is described in the section for the appropriate product.
+\end{itemize}
+\subsectionspace
+
+\noindent {\it Examples: embeddings and projections of $S_3 \times A_3$.}
+\\[6pt]
+As above, let 
+{\tt s3 := $S_3$} and {\tt a3 := $A_3$}, 
+the symmetric and alternating group on three letters (resp.), and let 
+{\tt s3a3 := $S_3\times A_3$}.
+{\codesize
+\begin{verbatim}
+gap> s3 := Group( (1,2), (1,2,3) );;  a3 := Group( (1,2,3) );;
+gap> s3a3 := DirectProduct( s3, a3 );  # returns Group([ (1,2), (1,2,3), (4,5,6) ])
+gap> Order( s3a3 );                    # returns  18
+
+\end{verbatim}}
+\noindent The following \gap\ code illustrates the behavior of the commands 
+{\tt Embedding} and {\tt Projection}, and the corresponding {\tt Source}, 
+{\tt Range}, and {\tt Image} commands (sec.~\ref{sec:mappings}): 
+{\codesize
+\begin{verbatim}
+gap> i1 := Embedding( s3a3, 1 );
+1st embedding into Group([ (1,2), (1,2,3), (4,5,6) ])
+gap> i2 := Embedding( s3a3, 2 );
+2nd embedding into Group([ (1,2), (1,2,3), (4,5,6) ])
+
+gap> Source( i1 );                    # returns Group([ (1,2), (1,2,3) ])
+gap> Range( i1 );                     # returns Group([ (1,2), (1,2,3), (4,5,6) ])
+gap> Image( i1 );                     # returns Group([ (1,2), (1,2,3) ])
+gap> ImagesSource( i1 );              # returns Group([ (1,2), (1,2,3) ])
+
+gap> Source( i2 );                    # returns Group([ (1,2,3) ])
+gap> Range( i2 );                     # returns Group([ (1,2), (1,2,3), (4,5,6) ])
+gap> Image( i2 );                     # returns Group([ (4,5,6) ])
+gap> ImagesSource( i2 );              # returns Group([ (4,5,6) ])
+
+gap> p1 := Projection( s3a3, 1 );
+1st projection of Group([ (1,2), (1,2,3), (4,5,6) ])
+gap> p2 := Projection( s3a3, 2 );
+2nd projection of Group([ (1,2), (1,2,3), (4,5,6) ])
+
+gap> Source( p1 );                    # returns Group([ (1,2), (1,2,3), (4,5,6) ])
+gap> Range( p1 );                     # returns Group([ (1,2), (1,2,3) ])
+gap> Image( p1 );                     # returns Group([ (1,2), (1,2,3) ])
+gap> Image( p1, (1,2,3) );            # returns (1,2,3)
+gap> Image( p1, (4,5,6) );            # returns ()
+gap> Image( p1, (1,2)(4,5,6) );       # returns (1,2)
+
+gap> Source( p2 );                    # returns Group([ (1,2), (1,2,3), (4,5,6) ])
+gap> Range( p2 );                     # returns Group([ (1,2,3) ])
+gap> Image( p2 );                     # returns Group([ (1,2,3) ])
+gap> Image( p2, (1,2,3) );            # returns ()
+gap> Image( p2, (4,5,6) );            # returns (1,2,3)
+gap> Image( p2, (1,2)(4,5,6) );       # returns (1,2,3)
+
+gap> Image( p2, (1,2,3)(4,5) );       # Error: (1,2,3)(4,5) is not in Source of p2
+brk> quit;                           
+
+gap> Elements( Source( p2 ) );
+[ (), (4,5,6), (4,6,5), (2,3), (2,3)(4,5,6), (2,3)(4,6,5), (1,2), 
+  (1,2)(4,5,6), (1,2)(4,6,5), (1,2,3), (1,2,3)(4,5,6), (1,2,3)(4,6,5), 
+  (1,3,2), (1,3,2)(4,5,6), (1,3,2)(4,6,5), (1,3), (1,3)(4,5,6), (1,3)(4,6,5) ]
+
+gap> Image( p2, (1,2,3)(4,6,5) );     # returns (1,3,2)
+
+\end{verbatim}}
+\noindent We could have used the command {\tt UnderlyingRelation}
+(sec.~\ref{sec:properties-of-mappings}) to display most of this information
+at once: 
+{\codesize
+\begin{verbatim}
+gap> Elements(UnderlyingRelation( i1 ));
+[ Tuple( [ (), () ] ), Tuple( [ (2,3), (2,3) ] ), Tuple( [ (1,2), (1,2) ] ), 
+  Tuple( [ (1,2,3), (1,2,3) ] ), Tuple( [ (1,3,2), (1,3,2) ] ), 
+  Tuple( [ (1,3), (1,3) ] ) ]
+
+gap> Elements(UnderlyingRelation( i2 ));
+[ Tuple( [ (), () ] ), Tuple( [ (1,2,3), (4,5,6) ] ), 
+  Tuple( [ (1,3,2), (4,6,5) ] ) ]
+
+gap> Elements(UnderlyingRelation( p1 ));
+[ Tuple( [ (), () ] ), Tuple( [ (4,5,6), () ] ), Tuple( [ (4,6,5), () ] ), 
+  Tuple( [ (2,3), (2,3) ] ), Tuple( [ (2,3)(4,5,6), (2,3) ] ), 
+  Tuple( [ (2,3)(4,6,5), (2,3) ] ), Tuple( [ (1,2), (1,2) ] ), 
+  Tuple( [ (1,2)(4,5,6), (1,2) ] ), Tuple( [ (1,2)(4,6,5), (1,2) ] ), 
+  Tuple( [ (1,2,3), (1,2,3) ] ), Tuple( [ (1,2,3)(4,5,6), (1,2,3) ] ), 
+  Tuple( [ (1,2,3)(4,6,5), (1,2,3) ] ), Tuple( [ (1,3,2), (1,3,2) ] ), 
+  Tuple( [ (1,3,2)(4,5,6), (1,3,2) ] ), Tuple( [ (1,3,2)(4,6,5), (1,3,2) ] ), 
+  Tuple( [ (1,3), (1,3) ] ), Tuple( [ (1,3)(4,5,6), (1,3) ] ), 
+  Tuple( [ (1,3)(4,6,5), (1,3) ] ) ]
+
+gap> Elements(UnderlyingRelation( p2 ));
+[ Tuple( [ (), () ] ), Tuple( [ (4,5,6), (1,2,3) ] ), 
+  Tuple( [ (4,6,5), (1,3,2) ] ), Tuple( [ (2,3), () ] ), 
+  Tuple( [ (2,3)(4,5,6), (1,2,3) ] ), Tuple( [ (2,3)(4,6,5), (1,3,2) ] ), 
+  Tuple( [ (1,2), () ] ), Tuple( [ (1,2)(4,5,6), (1,2,3) ] ), 
+  Tuple( [ (1,2)(4,6,5), (1,3,2) ] ), Tuple( [ (1,2,3), () ] ), 
+  Tuple( [ (1,2,3)(4,5,6), (1,2,3) ] ), Tuple( [ (1,2,3)(4,6,5), (1,3,2) ] ), 
+  Tuple( [ (1,3,2), () ] ), Tuple( [ (1,3,2)(4,5,6), (1,2,3) ] ), 
+  Tuple( [ (1,3,2)(4,6,5), (1,3,2) ] ), Tuple( [ (1,3), () ] ), 
+  Tuple( [ (1,3)(4,5,6), (1,2,3) ] ), Tuple( [ (1,3)(4,6,5), (1,3,2) ] ) ]
+gap> 
+\end{verbatim}}
+But note that {\tt UnderlyingRelation} does not tell the whole story.  In particular,
+it is impossible to infer from the output of {\tt UnderlyingRelation} the full 
+{\tt Source} and {\tt Range} of a general mapping.
+\\
+
+\subsection{Semidirect Products}
+The semidirect product of a group $N$
+with a group $G$ acting on $N$ via a homomorphism $\alpha$ from $G$ into
+the automorphism group of $N$ is the Cartesian product $G \times N$ with the
+multiplication 
+\[
+(g, n) \cdot (h, m) = (gh, n\bar{h} \cdot m)= (gh, n^{h\alpha} m).
+\]
+\begin{itemize}
+\item {\tt SemidirectProduct( $G, \, \alpha, \, N$ )}
+\item {\tt SemidirectProduct( $autgp, \, N$ )}\\[2pt]
+constructs the semidirect product of $N$ with $G$ acting via $\alpha$, where $\alpha$
+must be a homomorphism from $G$ into a group of automorphisms of $N$.
+\\[5pt]
+If $N$ is a full row space over a field $\F$, $\alpha$ must be a homomorphism from
+$G$ into a matrix group of the right dimension over a subfield of $\F$, or into a
+permutation group (in this case permutation matrices are taken).
+\\[5pt]
+In the second variant, $autgp$ must be a group of automorphism of $N$, it is a
+shorthand for {\tt SemidirectProduct( $autgp$, IdentityMapping($autgp$), $N$ )}. Note
+that (unless $autgrp$ has been obtained by the operation  {\tt AutomorphismGroup})
+you have to test {\tt IsGroupOfAutomorphisms( $autgrp$ )} to ensure that \gap\ knows that 
+$autgrp$ consists of group automorphisms.
+{\codesize
+\begin{verbatim}
+gap> n:=AbelianGroup(IsPcGroup,[5,5]);
+<pc group of size 25 with 2 generators>
+gap> au:=DerivedSubgroup(AutomorphismGroup(n));;
+gap> Size(au);                      # returns  120
+gap> p:=SemidirectProduct(au,n);
+<permutation group with 5 generators>
+gap> Size(p);                       # returns 3000
+gap> n:=Group((1,2),(3,4));;
+gap> au:=AutomorphismGroup(n);;
+gap> au:=First(Elements(au),i->Order(i)=3);;
+gap> au:=Group(au);
+<group with 1 generators>
+gap> SemidirectProduct(au,n);
+Error, no method found! For debugging hints type ?Recovery from NoMethodFound
+Error, no 2nd choice method found for `IsomorphismPcGroup' on 1 arguments
+gap> IsGroupOfAutomorphisms(au);
+true
+gap> SemidirectProduct(au,n);
+<pc group with 3 generators>
+gap> n:=AbelianGroup(IsPcGroup,[2,2]);
+<pc group of size 4 with 2 generators>
+gap> au:=AutomorphismGroup(n);
+<group of size 6 with 2 generators>
+gap> apc:=IsomorphismPcGroup(au);
+CompositionMapping( Pcgs([ (2,3), (1,2,3) ]) ->
+[ f1, f2 ], <action isomorphism> )
+gap> g:=Image(apc);
+Group([ f1, f2 ])
+gap> apci:=InverseGeneralMapping(apc);
+[ f1*f2^2, f1*f2 ] -> [ Pcgs([ f1, f2 ]) -> [ f1*f2, f2 ],
+Pcgs([ f1, f2 ]) -> [ f2, f1 ] ]
+gap> IsGroupHomomorphism(apci);
+true
+gap> p:=SemidirectProduct(g,apci,n);
+<pc group of size 24 with 4 generators>
+gap> IsomorphismGroups(p,Group((1,2,3,4),(1,2)));
+[ f1, f2, f3, f4 ] -> [ (2,3), (2,3,4), (1,4)(2,3), (1,2)(3,4) ]
+gap> SemidirectProduct(SU(3,3),GF(9)^3);
+<matrix group of size 4408992 with 3 generators>
+gap> SemidirectProduct(Group((1,2,3),(2,3,4)),GF(5)^4);
+<matrix group of size 7500 with 3 generators>
+gap> g:=Group((3,4,5),(1,2,3));;
+gap> mats:=[[[Z(2^2),0*Z(2)],[0*Z(2),Z(2^2)^2]],
+> [[Z(2)^0,Z(2)^0], [Z(2)^0,0*Z(2)]]];;
+gap> hom:=GroupHomomorphismByImages(g,Group(mats),[g.1,g.2],mats);;
+gap> SemidirectProduct(g,hom,GF(4)^2);
+<matrix group of size 960 with 3 generators>
+gap> SemidirectProduct(g,hom,GF(16)^2);
+<matrix group of size 15360 with 4 generators>
+\end{verbatim}}
+\noindent For the semidirect product $P$ of $G$ with $N$, {\tt Embedding( $P$, 1 )}
+embeds $G$, {\tt Embedding( $P$, 2 )} embeds $N$. The operation {\tt Projection(P)}
+returns the projection of $P$ onto $G$.\footnote{{\it Op.~cit.}, sec.~47.6.}
+{\codesize
+\begin{verbatim}
+gap> Size(Image(Embedding(p,1)));    # returns 6
+gap> Embedding(p,2);
+[ f1, f2 ] -> [ f3, f4 ]
+gap> Projection(p);
+[ f1, f2, f3, f4 ] -> [ f1, f2, <identity> of ..., <identity> of ... ]
+
+\end{verbatim}}
+
+\end{itemize}
+\subsectionspace
+
+\subsection{Subdirect Products\protect\footnotemark}
+\footnotetext{{\it Ibid.}, sec.~47.3.} 
+The subdirect product of the groups $G$ and $H$ with respect to the epimorphisms
+$\varphi: G \rightarrow A$ and
+$\psi: H \rightarrow A$
+(for a common group $A$) is the subgroup of the direct product $G \times H$
+consisting of the elements $(g, h)$ for which $\varphi(g) = \psi(h)$ . 
+It is the pull-back of the diagram:
+\begin{figure}[h]
+\begin{tikzpicture}[description/.style={fill=white,inner sep=2pt}]
+\matrix (m) [matrix of math nodes, row sep=3em,
+column sep=2.5em, text height=1.5ex, text depth=0.25ex]
+{  & & G \\
+ H & & A\\ };
+\path[->>,font=\footnotesize]
+(m-1-3) edge node[right] {$\varphi$} (m-2-3)
+(m-2-1) edge node[above] {$\psi$} (m-2-3);
+%\path[->,loosely dashed,font=\scriptsize]
+%(m-2-1) edge node[below] {$ \psi $} (m-1-3);
+\end{tikzpicture}
+\end{figure}
+\begin{itemize}
+\item {\tt SubdirectProduct( $G$ , $H$, $\varphi$, $\psi$ )}\\
+constructs the subdirect product of $G$ and $H$ with respect to the epimorphisms $\varphi$ from $G$ onto a group
+$A$ and $\psi$ from $H$ onto the same group $A$.
+For a subdirect product {\tt P}, the operation {\tt Projection(P, nr)} returns
+the projection on the {\tt nr}-th factor. (In general the factors do not embed
+in a subdirect product.)
+{\codesize
+\begin{verbatim}
+gap> g:=Group((1,2,3),(1,2));;
+gap> hom:=GroupHomomorphismByImagesNC(g,g,[(1,2,3),(1,2)],[(),(1,2)]);
+[ (1,2,3), (1,2) ] -> [ (), (1,2) ]
+gap> s:=SubdirectProduct(g,g,hom,hom);
+Group([ (1,2,3), (1,2)(4,5), (4,5,6) ])
+gap> Size(s);                                # returns 18
+gap> p:=Projection(s,2);
+2nd projection of Group([ (1,2,3), (1,2)(4,5), (4,5,6) ])
+gap> Image(p,(1,3,2)(4,5,6));                # returns (1,2,3)
+
+\end{verbatim}}
+\item {\tt SubdirectProducts( $G$, $H$ )}\\
+computes all subdirect products of $G$ and $H$ up to conjugacy in Parent($G$) $\times$ Parent($H$). The
+subdirect products are returned as subgroups of this direct product.
+\end{itemize}
+\subsectionspace
+
+\subsection{Wreath Products\protect\footnotemark}
+\footnotetext{{\it Ibid.}, sec.~47.4.} 
+The \emph{wreath product} of a group $G$ with a permutation group $P$ acting on $n$
+points is the semidirect product of the normal subgroup $G^n$ with the group $P$
+which acts on $G^n$ by permuting the components. 
+\begin{itemize}
+\item {\tt WreathProduct( $G$, $P$ )}
+\item {\tt WreathProduct( $G$, $H$ [, $hom$] )}\\
+constructs the wreath product of the group $G$ with the permutation group $P$ 
+(acting on its {\tt MovedPoints}). 
+\\[4pt]
+The second usage constructs the wreath product of the group $G$ with the image of the
+group $H$ under $hom$ where $hom$ must be a homomorphism from $H$ into a permutation
+group.  If $hom$ is not given, and $P$ is not a permutation group, then $hom$ is
+taken to be the result of {\tt IsomorphismPermGroup(P)} (whose degree may be
+dependent on the method and thus is not well-defined!).
+\\[4pt]
+If $W$ is a wreath product of $G$ with a permutation group $P$ of degree $n$, and 
+$1 \leq nr \leq n$, then the operation
+{\tt Embedding( $W$, $nr$ )} provides the embedding of $G$ in the $nr$-th component
+of the direct product of the base group $G^n$ of $W$. {\tt Embedding( $W$, $n+1$ )}
+is the embedding of $P$ in $W$. The operation {\tt Projection( $W$ )} 
+gives the projection onto the acting group $P$.
+{\codesize
+\begin{verbatim}
+gap> g:=Group((1,2,3),(1,2));     # the symmetric group on {1, 2, 3}
+gap> p:=Group((1,2,3));           # the alternating group on {1, 2, 3}
+gap> w:=WreathProduct(g,p);
+Group([ (1,2,3), (1,2), (4,5,6), (4,5), (7,8,9), (7,8), (1,4,7)(2,5,8)(3,6,9) ])
+gap> Order(w);                    # returns 648
+\end{verbatim}}
+The wreath product {\tt w} is the semidirect product $S_3 \times S_3 \times S_3
+\rtimes A_3$, which of course has order $|S_3|^3\cdot |A_3| = 6^3 \cdot 6 = 648$.
+
+{\codesize
+\begin{verbatim}
+gap> Embedding(w,1);
+1st embedding into Group( [ (1,2,3), (1,2), (4,5,6), (4,5), (7,8,9), (7,8),
+(1,4,7)(2,5,8)(3,6,9) ] )
+gap> Image(Embedding(w,3));     # returns Group([ (7,8,9), (7,8) ])
+gap> Image(Embedding(w,4));     # returns Group([ (1,4,7)(2,5,8)(3,6,9) ])
+gap> Image(Projection(w),(1,4,8,2,6,7,3,5,9));  # returns (1,2,3)
+
+\end{verbatim}}
+\item {\tt WreathProductImprimitiveAction( $G$, $H$ )}\\
+for two permutation groups $G$ and $H$ this function constructs the wreath product of $G$ and $H$ in the
+imprimitive action. If $G$ acts on $l$ points and $H$ on $m$ points this action will
+be on $l^m$ points, it will be imprimitive with $m$ blocks of size $l$ each.
+The operations {\tt Embedding} and {\tt Projection} operate on this product as described for general wreath products.
+{\codesize
+\begin{verbatim}
+gap> w:=WreathProductImprimitiveAction(g,p);;
+gap> LargestMovedPoint(w);      # returns 9
+
+\end{verbatim}}
+\item {\tt WreathProductProductAction( $G$, $H$ )}\\
+for two permutation groups $G$ and $H$ this function constructs the wreath product in
+product action. If $G$ acts on $l$ points and $H$ on m points this action will be on
+$l^m$ points.
+\\[4pt]
+The operations {\tt Embedding} and {\tt Projection} operate on this product as described for general wreath products.
+{\codesize
+\begin{verbatim}
+gap> w:=WreathProductProductAction(g,p);
+<permutation group of size 648 with 7 generators>
+gap> LargestMovedPoint(w);      # returns 27
+\end{verbatim}}
+\end{itemize}
+
+\newpage
+
+\section{Matrix Groups and the Classical Groups}
+\subsection{Fields}
+This subsection contains a highly abridged version of chapters 56 and 57 of the \gap\
+manual.  Initially, my main goal was to collect the few things we'll need to compute
+with matrix groups in \gap, but because the subject of fields is so important and
+interesting, I've included a bit more information here than is required for working
+with matrix groups.
+\\[4pt]
+A \emph{division ring} is a ring in which every non-zero element has an inverse. The most
+important class of division rings are the commutative ones, which are called \emph{fields}.
+\\[4pt]
+If a field $F$ is a subfield of a commutative ring $C$, $C$ can be considered as a
+vector space over the (left) acting domain $F$. In this situation, we call $F$ the
+\emph{field of definition} of $C$. Each field in \gap\ is represented as a vector
+space over a subfield, thus each field is in fact a field extension in a natural way,
+which is used by functions such as {\tt Norm} and {\tt Trace}.
+\begin{itemize}
+\item {\tt IsDivisionRing( $D$ )}\\
+A \emph{division ring} is a nontrivial associative algebra $D$ in which each nonzero
+element has a multiplicative inverse. 
+In \gap\ every division ring is a vector space over a division ring (possibly over
+itself). Note that being a division ring is not a property that a ring can acquire,
+because a ring is usually not represented as a vector space. 
+The field of coefficients is stored as {\tt LeftActingDomain( $D$ )}.
+
+\item {\tt IsField( D )}\\
+A \emph{field} is a commutative division ring.
+{\codesize
+\begin{verbatim}
+gap> IsField( GaloisField(16) );          # returns true (the field with 16 elements)
+gap> IsField( Rationals );                # returns true (the field of rationals)
+gap> q:= QuaternionAlgebra( Rationals );; # (a noncommutative division ring)
+gap> IsField( q );  IsDivisionRing( q );  # returns false true
+gap> mat:= [ [ 1 ] ];; a:= Algebra( Rationals, [ mat ] );;
+gap> IsDivisionRing( a );                 # returns false  (since the algebra a
+                                          # was not constructed as a division ring)
+\end{verbatim}}
+\item {\tt Field( $z,\dots$ )}
+\item {\tt Field( list )}
+\item {\tt Field( $F$, list )}\\
+returns the smallest field $K$ that contains all the elements $z,\dots$, or (resp.) the
+smallest field $K$ that contains all elements in {\tt list}. 
+If no subfield $F$ is given, $K$ is constructed as a field over itself. In the third form, {\tt Field} constructs the field generated
+by the field $F$ and the elements in the list {\tt list}, as a vector space over $F$.
+\item {\tt DefaultField( $z,\dots$ )}
+\item {\tt DefaultField( list )}\\
+returns a field $K$ that contains all the elements $z, \dots$, or (resp.) a field $K$ that contains all elements
+in the list {\tt list}.  The result need not be the smallest field in which the elements lie, 
+in contrast to the field returned by the {\tt Field} command. For example, for
+elements from cyclotomic fields, {\tt DefaultField} returns the smallest cyclotomic
+field in which the elements lie, but the elements may lie in a smaller number field
+which is not a cyclotomic field. 
+\item \verb.Z(p,d).
+\item \verb.Z(p^d).\\
+For creating elements of a finite field the function {\tt Z} can be used. The call
+{\tt Z(p,d)} (alternatively \verb.Z(p^d).) returns the designated generator of the
+multiplicative group of the finite field with $p^d$ elements. Here $p$ must be a prime.
+\\[4pt]
+\gap\ can represent elements of all finite fields \verb|GF(p^d)| such that
+either (1) \verb|p^d <= 65536| (in which case an extremely efficient internal
+representation is used); (2) {\tt d = 1}, (in which case, for large {\tt p}, the
+field is represented using the machinery of Residue Class Rings (see section
+14.4 of the \gap\ manual) or (3) if the Conway Polynomial of
+degree {\tt d} over {\tt GF(p)} is known, or can be computed.
+If you attempt to construct an element of \verb|GF(p^d)| 
+for which \verb|d > 1| and the relevant Conway Polynomial
+is not known, and not necessarily easy to find (see 57.5.2), 
+then \gap\ will stop with an error and enter the break loop. If you leave this
+break loop by entering return; \gap\ will attempt to compute the Conway 
+Polynomial, which may take a very long time.
+\\[4pt]
+The root returned by {\tt Z} is a generator of the multiplicative group of the finite
+field with $p d$ elements, which is cyclic. The order of the element is of course
+$p^d-1$.  The $p^d-1$ different powers of the root are exactly the nonzero elements
+of the finite field. Thus all nonzero elements of the finite field with $p^d$
+elements can be entered as \verb.Z(p^d)^i.. Note that this is also the form that
+\gap\ uses to output those elements when they are stored in the internal
+representation. In larger fields, it is more convenient to enter and print elements
+as linear combinations of powers of the  primitive element. 
+(See section 57.6 of the \gap\ manual.)
+\\[4pt]
+The additive neutral element is {\tt 0*Z(p)}. 
+%It is different from the integer 0 in
+%subtle ways. First {\tt IsInt( 0*Z(p) } is false and {\tt IsFFE( 0*Z(p) )}is true,
+%whereas it is just the other way around for the integer 0.
+The multiplicative neutral element is \verb.Z(p)^0.. 
+It is different from the integer 1, not only in the obvious way -- e.g.,
+\verb.Z(2)^0. {\tt +} \verb.Z(2)^0. is {\tt 0*Z(2)},  while {\tt 1+1} is {\tt 2} --
+but also in 
+more subtle ways.\footnote{See section 57.1 of the \gap\ manual \cite{gapmanual}.}
+%First IsInt(
+%Z(p)^0 ) (see 14.1.1) is false and IsFFE( Z(p)^0 ) (see 57.1.1) is true, whereas it is just the other way
+%around for the integer 1. 
+{\codesize
+\begin{verbatim}
+# some finite fields
+gap> Z(2);                        # returns Z(2)^0
+gap> Field( Z(2) );               # returns GF(2)
+gap> Elements( Field( Z(2) ) );   # returns [ 0*Z(2), Z(2)^0 ]
+
+gap> Z(5);                        # returns Z(5)
+gap> Field( Z(5) );               # returns GF(5)
+gap> Elements( Field( Z(5) ) );   # returns [ 0*Z(5), Z(5)^0, Z(5), Z(5)^2, Z(5)^3 ]
+
+gap> Z(32);                       # returns Z(2^5)
+gap> Field( Z(32) );              # returns GF(2^5)
+
+gap> Z(2)+Z(2); Z(2)*Z(2);        # returns 0*Z(2)  Z(2)^0
+gap> Z(5)+Z(5); Z(5)*Z(5);        # returns Z(5)^2  Z(5)^2
+gap> Z(32)+Z(32); Z(32)*Z(32);    # returns 0*Z(2)  Z(2^5)^2
+
+gap> Field(Z(4)); Field(Z(8));    # returns GF(2^2)  GF(2^3)
+gap> Elements( Field( Z(4) ) );   # returns [ 0*Z(2), Z(2)^0, Z(2^2), Z(2^2)^2 ]
+gap> Elements( Field( Z(8) ) );   # returns [ 0*Z(2), Z(2)^0, Z(2^3), Z(2^3)^2, Z(2^3)^3, ...
+                                                  ..., Z(2^3)^4, Z(2^3)^5, Z(2^3)^6 ]
+gap> Field( [ Z(4), Z(8) ] );     # returns GF(2^6) (the field of 64 elements)
+
+\end{verbatim}}
+% # some abelian number fields
+% gap> Field( E(9) );               # returns CF(9)
+% gap> Field( CF(4), [ E(9) ] );    # returns AsField( GaussianRationals, CF(36) )
+% gap> f1:= Field( EB(5) );         # returns NF(5,[ 1, 4 ])
+% gap> f2:= DefaultField( EB(5) );  # returns CF(5)
+% gap> f1 = f2;                     # returns false
+% gap> IsSubset( f2, f1 );          # returns true
+\noindent Since finite field elements are scalars, the operations 
+{\tt Characteristic, One, Zero, Inverse, AdditiveInverse, Order} 
+can be applied to them.\footnote{For a full description of these operations, 
+see the Gap manual \cite{gapmanual} sec.~30.10.} 
+{\codesize
+\begin{verbatim}
+gap> Characteristic( Z( 16 )^10 );       # returns 2
+gap> Characteristic( Z( 9 )^2 );         # returns 3
+gap> Characteristic( [ Z(4), Z(8) ] );   # returns 2
+gap> One( Z(9) );                        # returns Z(3)^0
+gap> One( 0*Z(4) );                      # returns Z(2)^0
+gap> Zero(Z(125));                       # returns 0*Z(5)
+gap> Inverse( Z(9) );                    # returns Z(3^2)^7
+gap> AdditiveInverse( Z(9) );            # returns Z(3^2)^5
+gap> Order( Z(9)^7 );                    # returns 8
+
+\end{verbatim}}
+\end{itemize}
+
+%\subsection{Matrix groups\protect\footnotemark}
+%\footnotetext{See Chapter 42 of the \gap\ manual~\cite{gapmanual} for more details.}
+\subsection{Matrix groups}\hspace{-2mm}\footnote{See Chapter 42 of the \gap\ manual~\cite{gapmanual} for more details.}
+Matrix groups are groups generated by invertible square matrices.\\
+For example,
+{\codesize
+\begin{verbatim}
+gap> m1 := [ [ Z(3)^0, Z(3)^0, Z(3) ],
+>            [ Z(3), 0*Z(3), Z(3) ],
+>            [ 0*Z(3), Z(3), 0*Z(3) ] ];;
+gap> m2 := [ [ Z(3), Z(3), Z(3)^0 ],
+>            [ Z(3), 0*Z(3), Z(3) ],
+>            [ Z(3)^0, 0*Z(3), Z(3) ] ];;
+gap> m := Group( m1, m2 );
+Group(
+[ [ [ Z(3)^0, Z(3)^0, Z(3) ], [ Z(3), 0*Z(3), Z(3) ], [ 0*Z(3), Z(3), 0*Z(3) ] ],
+[ [ Z(3), Z(3), Z(3)^0 ], [ Z(3), 0*Z(3), Z(3) ], [ Z(3)^0, 0*Z(3), Z(3) ] ] ])
+\end{verbatim}}
+\noindent Some attributes and operations available for matrix groups are the following:
+\begin{itemize}
+\item {\tt IsMatrixGroup( grp )}
+\\[4pt]
+For most operations, \gap\ only provides methods for finite matrix groups. Many calculations in finite matrix
+groups are done via a NiceMonomorphism (see 38.5) that represents a faithful action on vectors.
+\item {\tt DimensionOfMatrixGroup( matgrp )}\\
+returns the dimension of the matrix group {\tt matgrp}.
+\item {\tt DefaultFieldOfMatrixGroup( matgrp )}\\ A
+returns a field containing all the matrix entries of all elements of {\tt matgrp}. 
+It is not guaranteed to be the smallest field with this property.
+\item {\tt FieldOfMatrixGroup( matgrp )}\\
+returns the smallest field containing all the matrix entries of all elements of {\tt matgrp}. 
+As the calculation of this can be hard, this should onlybe used if one really needs
+the smallest field, use {\tt DefaultFieldOfMatrixGroup} to get (for example) the characteristic.
+\item {\tt TransposedMatrixGroup( matgrp )}\\
+returns the transpose of the matrix group {\tt matgrp}. 
+The transpose of the transpose of {\tt matgrp} is identical to {\tt matgrp}.
+{\codesize
+\begin{verbatim}
+gap> DimensionOfMatrixGroup(m);       # returns 3
+gap> DefaultFieldOfMatrixGroup(m);    # returns GF(3)
+
+gap> G := Group( [[0,-1],[1,0]] );; 
+gap> IsMatrixGroup(G);                # returns true
+gap> T := TransposedMatrixGroup( G ); # returns Group([ [ [ 0, 1 ], [ -1, 0 ] ] ])
+gap> IsIdenticalObj( G, TransposedMatrixGroup( T ) );  # returns true
+
+\end{verbatim}}
+\end{itemize}
+
+\subsection{Classical groups}
+%~\\The following functions return classical groups:
+%For the linear, symplectic, and unitary groups (the latter in
+%dimension at least 3), the generators are taken from [Tay87]; for the unitary groups in dimension 2, the isomorphism
+%of $SU(2; q)$ and $SL(2; q)$ is used, see for example [Hup67].
+The \emph{general linear group}, $\GL(n, R)$, is the group of all invertible
+$n\times n$ matrices over a ring $R$. 
+The \emph{special linear group}, $\SL(n,R)$, is the group of all invertible $n\times
+n$ matrices over a ring $R$ whose determinant is 1. 
+\begin{itemize}
+\item {\tt IsGeneralLinearGroup( grp )}
+\item {\tt IsGL( grp )}\\
+tests whether a group is isomorphic to a general linear group; 
+\item {\tt IsNaturalGL( matgrp )}\\
+tests whether a matrix group is the general linear group in the right dimension over the
+(smallest) ring which contains all entries of its elements.
+\\[4pt]
+Analogous methods are available for special linear groups.
+{\codesize
+\begin{verbatim}
+# Let m and G be the groups defined above.
+gap> IsMatrixGroup(m); IsGL(m);              # returns true false
+gap> IsMatrixGroup(G); IsGL(G);              # returns true false
+
+gap> gl := GL(2,3);                          # returns GL(2,3)
+gap> sl := SL(3,2);                          # returns SL(3,2)
+gap> IsMatrixGroup(gl); IsGL(gl); IsSL(gl);  # returns true true false
+gap> IsMatrixGroup(sl); IsGL(sl); IsSL(sl);  # returns true true true
+\end{verbatim}}
+
+% \item {\tt IsSpecialLinearGroup( grp )}
+% \item {\tt IsSL( grp )}\\
+% tests wether a group is isomorphic to a special linear group. 
+% \item {\tt IsNaturalSL( matgrp )}\\
+% tests whether a matrix group is the special linear group in the right dimension over the
+% (smallest) ring which contains all entries of its elements.
+% \item {\tt IsSubgroupSL( matgrp )}\\
+% tests whether a matrix group is a subgroup of the special linear group in the right dimension
+% over the (smallest) ring which contains all entries of its elements.
+\item {\tt GeneralLinearGroup( [ filt, ] $d, R$ )}
+\item {\tt GL( [ filt, ] $d, R$ )}
+\item {\tt GeneralLinearGroup( [ filt, ] $d, q$ )}
+\item {\tt GL( [ filt, ] $d, q$ )}\\
+The first two forms construct a group isomorphic to the general linear group 
+$GL( d, R )$ of all $d \times d$ matrices that are invertible over
+the ring $R$, in the category given by the filter {\tt filt}. 
+The third and the fourth form construct the general linear group over the finite
+field with $q$ elements.
+If {\tt filt} is not given it defaults to {\tt IsMatrixGroup}, and the returned group
+is the general linear group as a matrix group in its natural action (see also 42.3.2, 42.5.4).
+Currently supported rings {\tt R} are finite fields, the ring {\tt Integers}, and
+residue class rings {\tt Integers mod} $m$.
+{\codesize
+\begin{verbatim}
+gap> GL(4,3);                 # returns GL(4,3)
+gap> GL(2,Integers);          # returns GL(2,Integers)
+gap> GL(3,Integers mod 12);   # returns GL(3,Z/12Z)
+\end{verbatim}}
+\item {\tt SpecialLinearGroup( [filt, ] $d, R$ )}
+\item {\tt SL( [filt, ] $d, R$ )}
+\item {\tt SpecialLinearGroup( [filt, ] $d, q$ )}
+\item {\tt SL( [filt, ] $d, q$ )}\\
+The first two forms construct a group isomorphic to the special linear group 
+$SL( d, R )$ of all those $d\times d$ matrices over the ring $R$ whose determinant is the
+identity of $R$, in the category given by the filter {\tt filt}. 
+The third and the fourth form construct the special linear group over the finite field with $q$ elements.
+If {\tt filt} is not given it defaults to {\tt IsMatrixGroup}, and the returned group is the special linear group as a
+matrix group in its natural action (see also 42.3.4, 42.5.5).
+Currently supported rings $R$ are finite fields, the ring {\tt Integers}, and residue
+class rings {\tt Integers mod} $m$.
+{\codesize
+\begin{verbatim}
+gap> SpecialLinearGroup(2,2);  # returns SL(2,2)
+gap> SL(3,Integers);           # returns SL(3,Integers)
+gap> SL(4,Integers mod 4);     # returns SL(4,Z/4Z)
+\end{verbatim}}
+\noindent Using the {\tt OnLines} operation it is possible to obtain the corresponding projective groups in a permutation
+action:
+{\codesize
+\begin{verbatim}
+gap> g:=GL(4,3);;Size(g);      # returns 24261120
+gap> pgl:=Action(g,Orbit(g,Z(3)^0*[1,0,0,0],OnLines),OnLines);;
+gap> Size(pgl);                # returns 12130560
+
+\end{verbatim}}
+% \item {\tt GeneralUnitaryGroup( [filt, ]d, q )}
+% \item {\tt GU( [filt, ]d, q )}\\
+% constructs a group isomorphic to the general unitary group $GU( d, q )$ of those $d
+% \times d$ matrices over the field
+% with $q^2$ elements that respect a fixed nondegenerate sesquilinear form, in the category given by the filter
+% filt.
+\end{itemize}
+\subsection{Conjugacy classes in classical groups}
+For general and special linear groups, \gap\ has an efficient method to generate
+representatives of the conjugacy classes. This uses results from linear algebra on normal forms of matrices.
+\footnote{If you know how to do this for other types of classical groups, the \gap\
+  folks would like to hear from you.}
+{\codesize
+\begin{verbatim}
+gap> g := SL(4,9);               # returns SL(4,9)
+gap> NrConjugacyClasses(g);      # returns 861
+gap> cl := ConjugacyClasses(g);;
+gap> Length(cl);                 # returns 861
+\end{verbatim}}
+  \begin{itemize}
+\item {\tt NrConjugacyClassesGL( n, q )}
+\item {\tt NrConjugacyClassesSL( n, q )}\\
+for given integer n and prime power q, computes the number of conjugacy classes in
+the classical groups $\GL(n, q)$ and $\SL(n, q)$, resp.\footnote{See also sections
+  37.10.2 and 48.2 of the \gap\ manual~\cite{gapmanual}.}
+Analogous operations are available for the other classical groups,
+$\GU(n, q)$, $\SU(n, q)$, $\PGL(n, q)$, $\PGU(n, q)$, $\PSL(n, q),$ and $\PSU(n, q)$.
+% I NrConjugacyClassesGU( n, q ) F
+% I NrConjugacyClassesSU( n, q ) F
+% I NrConjugacyClassesPGL( n, q ) F
+% I NrConjugacyClassesPGU( n, q ) F
+% I NrConjugacyClassesPSL( n, q ) F
+% I NrConjugacyClassesPSU( n, q ) F
+% I NrConjugacyClassesSLIsogeneous( n, q, f ) F
+% I NrConjugacyClassesSUIsogeneous( n, q, f ) F
+% For each divisor f of n there is a group of Lie type with the same order as SL(n; q), such that its derived
+% subgroup modulo its center is isomorphic to PSL(n; q). The various such groups with fixed n and q are
+% called isogeneous. (Depending on congruence conditions on q and n several of these groups may actually
+% be isomorphic.) The function NrConjugacyClassesSLIsogeneous computes the number of conjugacy classes
+% in this group. The extreme cases f = 1 and f = n lead to the groups SL(n; q) and PGL(n; q), respectively.
+% The function NrConjugacyClassesSUIsogeneous is the analogous one for the corresponding unitary groups.
+% The formulae for the number of conjugacy classes are taken from [Mac81].
+% gap> NrConjugacyClassesGL(24,27);
+% 22528399544939174406067288580609952
+% gap> NrConjugacyClassesPSU(19,17);
+% 15052300411163848367708
+% gap> NrConjugacyClasses(SL(16,16));
+% 1229782938228219920
+ \end{itemize}
+\newpage
+
+\section{Representations}
+In the first subsection below, we review some very basic theory of representations of
+finite groups.  If this is too familiar, skip to the
+subsection~\ref{subsection-a5}
+where we give some examples demonstrating how to use \gap\ to work with
+group actions and permutation representations.
+%% \subsection{Permutation representations of finite groups}
+%% \input{RepresentationsTheory.tex}
+
+\subsection{Example:  the transitive permutation representations of $A_5$.}
+\label{subsection-a5}
+\input{RepresentationsExamples.tex}
+
+\vspace{5mm}
+%\noindent {\it Example:\protect\footnotemark  factor groups, natural homs, and representations of
+%  normalizers in $A_8$}\\[4pt]
+\subsection{Example: $A_8$ factor groups, natural homs, and representations of
+  normalizers}\hspace{-2mm}\protect\footnotemark
+\footnotetext{From chapter 5 of the \gap\ tutorial~\cite{gaptutorial}.}
+The group generated by the permutations (1,2) and (1,2,3,4,5,6,7,8) is $S_8$,
+the symmetric group on eight points.  We assign it to the identifier s8 
+as follows:
+{\codesize
+\begin{verbatim}
+
+gap> s8 := Group( (1,2), (1,2,3,4,5,6,7,8) );;
+
+\end{verbatim}}
+\noindent Now $S_8$ contains the alternating group on eight points which can be described in
+several ways, e.g., as the group of all even permutations in $S_8$, or as the derived
+subgroup of $S_8$.
+{\codesize
+\begin{verbatim}
+
+gap> a8 := DerivedSubgroup( s8 );  
+Group([ (1,2,3), (2,3,4), (2,4)(3,5), (2,6,4), (2,4)(5,7), (2,8,6,4)(3,5) ])
+
+gap> Size( a8 );                                  % returns 20160
+gap> IsAbelian( a8 );                             % returns false
+gap> IsPerfect( a8 );                             % returns true
+gap> syl2 := SylowSubgroup( a8, 2 );; 
+gap> Size( syl2 );                                % returns 64
+gap> Normalizer( a8, syl2 ) = syl2;               % returns true   
+                                                  % (Sylow subgroups are self-normalizng.)
+gap> cent := Centralizer( a8, Centre( syl2 ) );; 
+gap> Size( cent );                                % returns 192
+gap> DerivedSeries( cent );; List( last, Size );  % returns [ 192, 96, 32, 2, 1 ]
+
+\end{verbatim}}
+\noindent Next we want to calculate a subgroup of $G = $ {\tt a8}, then its normalizer, and finally
+the structure of the extension. We begin by forming a subgroup generated by three commuting involutions,
+i.e., a subgroup isomorphic to the additive group of the vector space $2^3$.
+(We will sometimes refer to this subgroup as $H= $ {\tt elab}.)  
+{\codesize
+\begin{verbatim}
+
+gap> elab := Group( (1,2)(3,4)(5,6)(7,8), (1,3)(2,4)(5,7)(6,8), (1,5)(2,6)(3,7)(4,8) );;
+gap> Size( elab );                                % returns 8
+gap> IsElementaryAbelian( elab );                 % returns true
+
+\end{verbatim}}
+\noindent As usual, \gap\ prints the group by giving all its generators. This can be annoying, especially if there are
+many of them or if they are of huge degree.  You can give a name to the group itself using
+the function {\tt SetName}. 
+We do this with the name \verb.2^3. below which reflects the mathematical properties of the
+group. From now on, \gap\ will use this name when printing the group for us, but we cannot use this
+name to specify the group to \gap, because the name does not know to which group it
+was assigned.  When talking to the computer, you must always use identifiers.
+{\codesize
+\begin{verbatim}
+
+gap> SetName( elab, "2^3" ); elab;                    % returns 2^3
+gap> norm := Normalizer( a8, elab );; Size( norm );   % returns 1344
+
+\end{verbatim}}
+\noindent Now that we have the subgroup $N_G(H)= $ {\tt norm} of order 1344 and its subgroup $H=
+$ {\tt elab}, we want to look at its factor
+group $N_G(H)/H$. We also want to find preimages of factor group elements, so we use
+the {\bf natural homomorphism} defined on $N_G(H)= $ {\tt norm} with kernel $H= $ {\tt
+  elab} and image $N_G(H)/H$.
+{\codesize
+\begin{verbatim}
+
+gap> hom := NaturalHomomorphismByNormalSubgroup( norm, elab );
+<action epimorphism>
+gap> f := Image( hom );
+Group([ (), (), (), (4,5)(6,7), (4,6)(5,7), (2,3)(6,7), (2,4)(3,5),(1,2)(5,6) ])
+gap> Size( f );                           % returns 168
+
+\end{verbatim}}
+\noindent The factor group {\tt f = } $ N_G(H)/H = $ {\tt norm/elab} is again represented as a permutation
+group. 
+(However, the action domain of this factor group has nothing to do with the action
+domain of {\tt norm}.)
+We can now form images and preimages under the natural homomorphism. The set of
+preimages of an element under {\tt hom} is a coset modulo $H= $ {\tt elab}. 
+%We use the function {\tt PreImages} here because {\tt hom} is not a bijection, 
+%so an element of the range can have several preimages or none at all.
+{\codesize
+\begin{verbatim}
+
+gap> ker:= Kernel( hom );                      % returns  2^3
+gap> x := (1,8,3,5,7,6,2);; Image( hom, x );   % returns  (1,7,5,6,2,3,4)
+gap> coset := PreImages( hom, last );          % returns  RightCoset(2^3,(2,8,6,7,3,4,5))
+
+\end{verbatim}}
+\noindent Note that \gap\ is free to choose any representative for the coset of preimages. Of
+course, if $x$ and $y$ are two representatives, the quotient $x^{-1}y$ lies in the
+kernel $H= $ {\tt ker} of the homomorphism.
+{\codesize
+\begin{verbatim}
+
+gap> rep:= Representative( coset );            % returns  (2,8,6,7,3,4,5)
+gap> x * rep^-1 in ker;                        % returns  true
+
+\end{verbatim}}
+\noindent The factor group $ N_G(H)/H = $ {\tt f} is a \emph{simple} group; i.e., it has no non-trivial normal
+subgroups. 
+\gap\ can detect this fact, and it can then also find the name by which this simple
+group is known among group theorists. (Such names are of course not available for
+non-simple groups.)
+{\codesize
+\begin{verbatim}
+
+gap> IsSimple( f );                              % returns true
+gap> IsomorphismTypeInfoFiniteSimpleGroup( f );  
+rec( series := "L", parameter := [ 2, 7 ],
+name := "A(1,7) = L(2,7) ~ B(1,7) = O(3,7) ~ C(1,7) = S(2,7) ~ 2A(1,7) = U(2,7) ~ A(2,2) = L(3,2)" )
+gap> SetName( f, "L_3(2)" );
+
+\end{verbatim}}
+\noindent We give {\tt f} the name \verb!L_3(2)! because the last part of the name string reveals that it is isomorphic to the
+simple linear group $L_3(2)$. This group, however, also has a lot of other names. 
+
+The group $N_G(H)= $ {\tt norm} acts on the eight elements of its normal subgroup $H
+= $ {\tt elab} by conjugation, yielding a representation
+of $L_3(2)$ in $S_8$ which leaves one point fixed (namely, the point 1).
+
+More precisely, let $\tau : N_G(H) \rightarrow \Sym(H)$ denote the conjugation
+representation (where $\Sym(H)\cong S_8$, since $H$ has 8 elements).  
+That is, for each $g\in N_G(H)$, $\tau: g \mapsto \tau_g\in \Sym(H)$,
+where $\tau_g(h) = gh g^{-1}$, for $h\in H$.  Now, the kernel
+\[
+\ker \tau = \{ g\in N_G(H) \mid  gh g^{-1} = h \text{ for all } h\in H\}
+\]
+clearly contains $H$, since $H$ is abelian.  
+%Also, as we saw above, $N_G(H)/H$ is simple, so 
+Actually, $\ker \tau$ is equal to $H$.  (Otherwise, $\ker \tau / H$ would
+be a nontrivial normal subgroup of $N_G(H)/H$, which is impossible, since $N_G(H)/H$
+is simple.)
+Therefore, the image of the representation is $\tau(N_G(H)) \cong N_G(H)/H \cong L_3(2)$.  
+This image can be computed with the function {\tt Action}, which we will use below.
+But first recall that, from the start, we had 
+\[
+2^3 \cong H \subnormal N_G(H) \leq A_8 \subnormal S_8
+\]
+and the image $\tau(N_G(H))$ is a subgroup of $\Sym(H) \cong S_8$.  In fact, $\tau(N_G(H)) \leq
+N_G(H)$, and we can show that $N_G(H)$ is indeed a split extension of the elementary
+abelian group $H$ with the image $\tau(N_G(H))$. 
+{\codesize
+\begin{verbatim}
+
+gap> op := Action( norm, elab );
+Group([ (), (), (), (5,6)(7,8), (5,7)(6,8), (3,4)(7,8), (3,5)(4,6), (2,3)(6,7) ])
+gap> IsSubgroup( a8, op );                   % returns true
+gap> IsSubgroup( norm, op );                 % returns true
+gap> IsTrivial( Intersection( elab, op ) );  % returns true
+gap> SetName( norm, "2^3:L_3(2)" );
+
+\end{verbatim}}
+\noindent By the way, you should not try the operator \verb.<. instead of the function {\tt IsSubgroup}. Something like
+{\codesize
+\begin{verbatim}
+
+gap> elab < a8;           % returns false
+
+\end{verbatim}}
+\noindent will not cause an error, but the result does not signify anything about the inclusion of one group in another;
+\verb.<. tests which of the two groups is less in some total order. On the other hand, the equality operator = in
+fact does test the equality of its arguments.
+
+\section{Miscellaneous Useful Commands}
+\label{sec:lists}
+%\subsection{Lists}
+\noindent {\bf Lists.}
+A list is constructed as follows:
+{\codesize
+\begin{verbatim}
+gap> mylist := [ 2, 3, 5, 7, 11, 13, 17, 19 ];;
+\end{verbatim}}
+\noindent You can extract certain elements from a list to generate new lists as follows:
+{\codesize
+\begin{verbatim}
+gap> mylist{[4..6]};     # returns [ 7, 11, 13 ]
+gap> mylist{[1,7,1,8]};  # returns [ 2, 17, 2, 19 ]
+\end{verbatim}}
+\noindent It is possible to nest such sublist extractions, as shown in the following example:
+{\codesize
+\begin{verbatim}
+gap> m := [ [1,2,3], [4,5,6], [7,8,9], [10,11,12] ];; 
+gap> m{[1,2,3]}{[3,2]};           # returns [ [ 3, 2 ], [ 6, 5 ], [ 9, 8 ] ]
+gap> l := m{[1,2,3]};; l{[3,2]};  # returns [ [ 7, 8, 9 ], [ 4, 5, 6 ] ]
+\end{verbatim}}
+\noindent Note the difference between the last two outputs.
+\\[4pt]
+In one of our applications, we constructed a list of lists of intervals
+in subgroup lattices.  Here's a simple example:
+{\codesize
+\begin{verbatim}
+gap> G:=SymmetricGroup(5);
+gap> H:=Representative(ccsg[8]);   # returns  Group([ (1,2,3,4,5) ])
+gap> StructureDescription(H);      # returns  "C5"
+gap> intHG:=IntermediateSubgroups(G,H);;
+\end{verbatim}}
+\noindent The function {\tt IntermediateSubgroups(G,H)} returns an object which has two fields:
+{\tt subgroups} containing a lists of the subgroups \emph{strictly} between $H$ and
+$G$, and {\tt inclusions} which contains a list of covering relations among the
+subgroups in {\tt subgroups}.    For example, if {\tt [ 3, 5 ]} appears in
+{\tt inclusions}, it means the subgroup labelled 3 is a maximal subgroup of the
+subgroup labelled 5. 
+The number 0 denotes $H$ and the highest number denotes $G$.  Continuing with
+the example above, we have
+{\codesize
+\begin{verbatim}
+gap> intHG.inclusions;  # returns [ [ 0, 1 ], [ 1, 2 ], [ 1, 3 ], [ 2, 4 ], [ 3, 4 ] ] ]
+\end{verbatim}}
+\noindent This tells us that the interval from $H=C_5$ up to $G=S_5$ is the lattice of
+subgroups shown in the figure below.
+\begin{figure}[h]
+%\caption{The interval $[C_5, S_5]$ in $\Sub[S_5]$.}
+%\label{fig:1}
+\begin{center}
+\begin{tikzpicture}[scale=1]
+\node (0) at (0,0) [draw, circle,inner sep=1.5pt] {};
+\node (1) at (-0,1) [draw, circle, inner sep=1.5pt] {};
+\node (2) at (0.75,2) [draw, circle, inner sep=1.5pt] {};
+\node (3) at (-0.75,2) [draw, circle, inner sep=1.5pt] {};
+\node (4) at (-0,3) [draw, circle, inner sep=1.5pt] {};
+\draw[font=\scriptsize] (.6,-.1) node {$0=H$};
+\draw[font=\scriptsize] (.5,3.2) node {$4=G$};
+\draw[font=\scriptsize] (.3,.9) node {$1$};
+\draw[font=\scriptsize] (-1,2) node {$2$};
+\draw[font=\scriptsize] (1,2) node {$3$};
+\draw[semithick]
+(0) to (1)
+(1) to (2)
+(1) to (3)
+(2) to (4)
+(3) to (4);
+\end{tikzpicture}
+\end{center}
+\end{figure}
+
+Now, suppose we want to start a list of such covering relation
+lists; i.e.~a list of intervals in subgroup lattices. We store the first
+interval in {\tt incl}:
+{\codesize
+\begin{verbatim}
+gap> incl:=[intHG.inclusions];  # returns [ [ [ 0, 1 ], [ 1, 2 ], [ 1, 3 ], [ 2, 4 ], [ 3, 4 ] ] ]
+\end{verbatim}}
+\noindent We get the next interval we want, say,
+{\codesize
+\begin{verbatim}
+gap> K:=Representative(ccsg[10]);;         
+gap> intKG:=IntermediateSubgroups(G,K);;
+\end{verbatim}}
+\noindent Then we use the {\tt Add} function to append the new list of covering relations
+to the original list as follows:
+{\codesize
+\begin{verbatim}
+gap> Add(incl,intKG.inclusions);         
+gap> incl;
+[ [ [ 0, 1 ], [ 1, 2 ], [ 1, 3 ], [ 2, 4 ], [ 3, 4 ] ], 
+  [ [ 0, 1 ], [ 0, 2 ], [ 1, 3 ], [ 2, 3 ] ] ]
+\end{verbatim}}
+\noindent We may want to search all groups for such upper intervals and store them without
+repetition.  This is a bit trickier because, for example, GAP views the two lists
+{\codesize
+\begin{verbatim}
+[ [ 0, 1 ], [ 1, 2 ], [ 1, 3 ], [ 2, 4 ], [ 3, 4 ] ],
+[ [ 0, 1 ], [ 1, 3 ], [ 1, 2 ], [ 3, 4 ], [ 2, 4 ] ]
+\end{verbatim}}
+\noindent as distinct, though we recognize them as the same lattice
+(shown in the figure above).  This is easily remedied by sorting the lists.  The
+first list is already sorted lexicographically.  We sort the second as follows:
+{\codesize
+\begin{verbatim}
+SSortedList([ [ 0, 1 ], [ 1, 3 ], [ 1, 2 ], [ 3, 4 ], [ 2, 4 ] ]);
+[ [ 0, 1 ], [ 1, 2 ], [ 1, 3 ], [ 2, 4 ], [ 3, 4 ] ]
+\end{verbatim}}
+\noindent and see that the sorted version matches the first list.
+Unfortunately, not all repetitions of lattice intervals can be avoided simply by
+sorting. Consider, for example, the two hexagons,
+{\codesize
+\begin{verbatim}
+[ [ 0, 1 ], [ 0, 2 ], [ 1, 3 ], [ 2, 4 ], [ 3, 5 ], [ 4, 5 ] ]
+[ [ 0, 1 ], [ 0, 3 ], [ 1, 2 ], [ 2, 5 ], [ 3, 4 ], [ 4, 5 ] ]
+\end{verbatim}}
+\noindent These are already sorted, yet they are distinct lists which
+give the same lattice.  One solution (perhaps not the most efficient)
+is given by the following routine, {\tt isIsomorphicInterval}, which checks
+whether two lists of covering relations represent isomorphic intervals;
+i.e.~whether they are the same modulo a relabelling of the elements.
+{\codesize
+\begin{verbatim}
+
+isIsomorphicInterval:=function(list1, list2)
+    # Gap function for testing whether two sets of covering relations 
+    # are the same modulo relabelling. 
+    
+    local n, m, j, list3, G, p;
+    
+    if not IsList(list1) or not IsList(list2) then
+        Error("usage: isIsomorphicInterval( <lst1>, <lst2> );");
+    fi;
+    if Length(list1) <> Length(list2)  then
+        return false;
+    fi;
+        
+    list1 := SSortedList(list1);
+    list2 := SSortedList(list2);
+
+    n:=Length(list1);
+    
+    m:=Maximum(Maximum(list1));
+  
+    G:=SymmetricGroup(m);
+    
+    for p in Elements(G) do
+        list3 := [[ ]];
+        for j in [1..n] do
+            list3[j]:=List(list1[j], x->((x+1)^p)-1); 
+        od;
+        list3:=SSortedList(list3);
+        if list3=list2 then
+            return true;
+        fi;
+    od;
+    return false;
+end;
+
+\end{verbatim}}

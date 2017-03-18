@@ -1,0 +1,199 @@
+\subsection{Examples of O'Nan-Scott types}
+\label{sec:examples-onan-scott}
+As noted in Section \ref{sec:prim-perm-groups}, the \GAP\ command {\tt ONanScottType( $G$ )}
+returns the type of a primitive permutation group $G$, according to the
+O'Nan-Scott classification described in
+Section~\ref{sec:onan-scott-theorem}. 
+
+In the tables below we give some examples of primitive permutation groups of relatively
+small degree that are of types 2, 3a, 3b, and 4c.
+(Note, that for groups of degree up to 2499, O'Nan-Scott types 4a, 4b and 5
+cannot occur.)
+
+
+{\small
+  \begin{tabular}{r|l|l}
+  \multicolumn{3}{c}{Type 2. \emph{Almost Simple Groups}}\\\toprule
+  & & GAP Index \\
+    Order & Name & {\tt PrimitiveGroup(i,j)} \\
+%    $|G|$ & Name & GAP index \\
+\midrule
+ 60 & $A_5$ & (5,4), (6,1), (10,1) \\
+ 120 & $S_5$ & (5,5), (6,2), (10,2) \\
+ 168 & $\PSL(3,2)$ & (7,5), (8,4) \\
+ 336 & $\PSL(3,2) \rtimes C_2$ & (8,5) \\
+ 360 & $A_6$ & (15,2), (6,3), (10,3) \\
+ 504 & $\PSL(2,8)$ & (9,8) \\
+ 660 & $\PSL(2,11)$ & (11,5), (12,3) \\
+ 720 & $S_6$ & (6,4), (10,5), (15,3) \\
+ 720 & $A_6 \rtimes C_2$ & (10,4) \\
+ 720 & $A_6 . C_2$ & (10,6) \\
+ 1,092 & $\PSL(2,13)$ & (14,1) \\
+ 1,320 & $\PSL(2,11) \rtimes C_2$ & (12,4) \\
+ 1,440 & $(A_6 . C_2) \rtimes C_2$ & (10,7) \\
+ 1,512 & $\PSL(2,8) \rtimes C3$ & (9,9) \\
+ 2,184 & $\PSL(2,13) \rtimes C_2$ & (14,2) \\
+ 2,448 & $\PSL(2,17)$ & (18,1) \\
+ 2,520 & $A_7$ & (7,6), (15,1) \\
+ 3,420 & $\PSL(2,19)$ & (20,1) \\
+ 4,080 & $\PSL(2,16)$ & (17,6) \\
+ 4,896 & $\PSL(2,17) \rtimes C_2$ & (18,2) \\
+ 5,040 & $S_7$ & (7,7) \\
+ 5,616 & $\PSL(3,3)$ & (13,7) \\
+ 6,840 & $\PSL(2,19) \rtimes C_2$ & (20,2) \\
+ 7,920 & $M_{11}$ & (11,6) \\
+ 7,920 & $M_{11}$ & (12,1) \\
+ 8,160 & $\PSL(2,16) \rtimes C_2$ & (17,7) \\
+ 16,320 & $\PSL(2,16) \rtimes C4$ & (17,8)\\
+ 20,160 & $A_8$ & (8,6), (15,4)  \\
+ 40,320 & $S_8$ & (8,7) \\
+ 95,040 & $M_{12}$ & (12,2) \\
+ 181,440 & $A_9$ & (9,10) \\
+ 362,880 & $S_9$ & (9,11) \\
+ 1,814,400 & $A_{10}$ & (10,8) \\
+ 3,628,800 & $S_{10}$ & (10,9) \\
+ 19,958,400 & $A_{11}$ & (11,7) \\
+ 39,916,800 & $S_{11}$ & (11,8)\\
+ %% & $\vdots$  &  \\
+ %% $n!/2$ & $A_{n}$ & $(n,i)$ \\
+ %% $n!$ & $S_{n}$ & $(n,i+1)$\\
+\end{tabular}
+
+
+
+
+%% # 3a Diagonal, Socle consists of two normal subgroups.
+  \begin{tabular}{r|l|l}
+  \multicolumn{3}{c}{Type 3a. \emph{Diagonal, socle consists of two normal subgroups.}}\\\toprule
+    Order & Name & GAP index \\
+\midrule
+ 3,600 & $(A_5 \times A_5)$ &(60,1) \\
+ 7,200 & $(A_5 \times A_5) \rtimes C_2$ & (60,2) \\
+ 28,224 & $\PSL(3,2) \times \PSL(3,2)$ & (168,1) \\
+ 56,448 & $(\PSL(3,2) \times \PSL(3,2)) \rtimes C_2$ & (168,2) \\
+ 129,600 & $A_6 \times A_6$ & (360,1) \\
+ 259,200 & $(A_6 \times A_6) \rtimes C_2$ & (360,2) \\
+ 259,200 & $(A_6 \times A_6) \rtimes C_2$ & (360,3)\\
+\end{tabular}
+
+\vskip1cm
+
+%% # 3b Diagonal, Socle is minimal normal.
+  \begin{tabular}{r|l|l}
+  \multicolumn{3}{c}{Type 3b. \emph{Diagonal, socle is minimal normal.}}\\\toprule
+    Order & Name & GAP index \\
+\midrule
+ 7,200 & $(A_5 \times A_5) \rtimes C_2$ & (60,3) \\
+ 7,200 & $(A_5 \times A_5) \rtimes C_2$ & (60,4) \\
+ 14,400 & $((A_5 \times A_5) \rtimes C_2) \rtimes C_2)$ & (60,5) \\
+ 56,448 & $(\PSL(3,2) \times \PSL(3,2)) \rtimes C_2$ & (168,3) \\
+ 56,448 & $(\PSL(3,2) \times \PSL(3,2)) \rtimes C_2$ & (168,4) \\
+ 112,896 & $((\PSL(3,2) \times \PSL(3,2)) \rtimes C_2) \rtimes C_2$ & (168,5) \\
+ 259,200 & $(A_6 \times A_6) \rtimes C_2$ & (360,5) \\
+ 259,200 & $(A_6 \times A_6) \rtimes C_2$ & (360,6)\\
+\end{tabular}
+
+\vskip1cm
+
+%% # 4c Product action with the first factor primitive of type 2.
+  \begin{tabular}{r|l|l}
+  \multicolumn{3}{c}{Type 4c. \emph{Product action, first factor primitive type 2.}}\\\toprule
+    Order & Name & GAP index \\
+\midrule
+ 7,200 & $(A_5 \times A_5) \rtimes C_2$ & (25,23) \\
+ 14,400 & $((A_5 \times A_5) \rtimes C_2) \rtimes C_2$ & (25,24) \\
+ 14,400 & $(A_5 \times A_5) \rtimes C_4$ & (25,25) \\
+ 28,800 & $(S_5 \times S_5) \rtimes C_2$ & (25,26) \\
+ 259,200 & $(A_6 \times A_6) \rtimes C_2$ & (36,13) \\
+ 518,400 & $((A_6 \times A_6) \rtimes C_2) \rtimes C_2$ & (36,14) \\
+ 518,400 & $(A_6 \times A_6) \rtimes C_4$ & (36,15)\\
+\end{tabular}
+%% # 4a Product action with the first factor primitive of type 3a.
+%% # 4b Product action with the first factor primitive of type 3b.
+%% # 5 Twisted wreath product.
+}
+
+
+%% \midrule
+%%  60 & $A_5$ & (5,4), (6,1), (10,1) \\
+%%  120 & $S_5$ & (5,5), (6,2), (10,2) \\
+%%  120 & $S_5$ & 
+%%  168 & $\PSL(3,2)$ & (7,5) \\
+%%  168 & $\PSL(3,2)$ & (8,4) \\
+%%  360 & $A_6$ & (15,2) \\
+%%  336 & $\PSL(3,2) : C_2$ & (8,5) \\
+%%  360 & $A_6$ & (6,3) \\
+%%  360 & $A_6$ & (10,3) \\
+%%  504 & $\PSL(2,8)$ & (9,8) \\
+%%  660 & $\PSL(2,11)$ & (11,5) \\
+%%  660 & $\PSL(2,11)$ & (12,3) \\
+%%  720 & $S_6$ & (6,4) \\
+%%  720 & $A_6 : C_2$ & (10,4) \\
+%%  720 & $S_6$ & (10,5) \\
+%%  720 & $A_6 . C_2$ & (10,6) \\
+%%  720 & $S_6$ & (15,3) \\
+%%  1092 & $\PSL(2,13)$ & (14,1) \\
+%%  1320 & $\PSL(2,11) : C_2$ & (12,4) \\
+%%  1440 & $(A_6 . C_2) : C_2$ & (10,7) \\
+%%  1512 & $\PSL(2,8) : C3$ & (9,9) \\
+%%  2184 & $\PSL(2,13) : C_2$ & (14,2) \\
+%%  2448 & $\PSL(2,17)$ & (18,1) \\
+%%  2520 & $A_7$ & (7,6) \\
+%%  2520 & $A_7$ & (15,1) \\
+%%  3420 & $\PSL(2,19)$ & (20,1) \\
+%%  4080 & $\PSL(2,16)$ & (17,6) \\
+%%  4896 & $\PSL(2,17) : C_2$ & (18,2) \\
+%%  5040 & $S_7$ & (7,7) \\
+%%  5616 & $\PSL(3,3)$ & (13,7) \\
+%%  6840 & $\PSL(2,19) : C_2$ & (20,2) \\
+%%  7920 & $M_{11}$ & (11,6) \\
+%%  7920 & $M_{11}$ & (12,1) \\
+%%  8160 & $\PSL(2,16) : C_2$ & (17,7) \\
+%%  16320 & $\PSL(2,16) : C4$ & (17,8)
+%%  20160 & $A_8$ & (8,6), (15,4)  \\
+%%  40320 & $S_8$ & (8,7) \\
+%%  95040 & $M_{12}$ & (12,2) \\
+%%  181440 & $A_9$ & (9,10) \\
+%%  362880 & $S_9$ & (9,11) \\
+%%  1814400 & $A_{10}$ & (10,8) \\
+%%  3628800 & $S_{10}$ & (10,9) \\
+%%  & $\vdots$  &  \\
+%%  $n!/2$ & $A_{n}$ & $(n,i)$ \\
+%%  $n!$ & $S_{n}$ & $(n,i+1)$\\
+%% \end{tabular}
+
+
+%%   \begin{tabular}{r|l|l}
+%%   \multicolumn{3}{c}{Type 2. \emph{Almost Simple Groups}}\\\toprule
+%%     Order & Name & GAP index \\
+%% \midrule
+%%  20160 & $A_8$ & (8,6) \\
+%%  20160 & $A_8$ & (15,4) \\
+%%  40320 & $S_8$ & (8,7) \\
+%%  95040 & $M_{12}$ & (12,2) \\
+%%  181440 & $A_9$ & (9,10) \\
+%%  362880 & $S_9$ & (9,11) \\
+%%  1814400 & $A_{10}$ & (10,8) \\
+%%  3628800 & $S_{10}$ & (10,9) \\
+%%  & $\vdots$  &  \\
+%%  $n!/2$ & $A_{n}$ & $(n,i)$ \\
+%%  $n!$ & $S_{n}$ & $(n,i+1)$\\
+%% \end{tabular}
+ %% 239500800 & $A_{12}$ & (12,5) \\
+ %% 479001600 & $S_{12}$ & (12,6) \\
+ %% 3113510400 & $A_{13}$ & (13,8) \\
+ %% 6227020800 & $S_{13}$ & (13,9) \\
+ %% 43589145600 & $A_{14}$ & (14,3) \\
+ %% 87178291200 & $S_{14}$ & (14,4) \\
+ %% 653837184000 & $A_{15}$ & (15,5) \\
+ %% 1307674368000 & $S_{15}$ & (15,6) \\
+ %% 10461394944000 & $A_{16}$ & (16,21) \\
+ %% 20922789888000 & $S_{16}$ & (16,22) \\
+ %% 177843714048000 & $A_{17}$ & (17,9) \\
+ %% 355687428096000 & $S_{17}$ & (17,10) \\
+ %% 3201186852864000 & $A_{18}$ & (18,3) \\
+ %% 6402373705728000 & $S_{18}$ & (18,4) \\
+ %% 60822550204416000 & $A_{19}$ & (19,7) \\
+ %% 121645100408832000 & $S_{19}$ & (19,8) \\
+ %% 1216451004088320000 & $A_{20}$ & (20,3) \\
+ %% 2432902008176640000 & $S_{20}$ & (20,4)

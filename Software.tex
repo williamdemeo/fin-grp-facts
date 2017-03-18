@@ -1,0 +1,103 @@
+\GAP\ contains a library of primitive permutation groups which includes the
+following permutation groups up to permutation isomorphism (i.e., up to
+conjugacy in the corresponding symmetric group):
+\begin{itemize}
+\item 
+all primitive permutation groups of degree $< 2500$, calculated by Colva Roney-Dougal in~\cite{Roney-Dougal:2005}; in particular,
+\item the primitive permutation groups up to degree 50, calculated by C. Sims,
+\item the primitive groups with insoluble socles of degree $< 1000$ as calculated in~\cite{Dixon:1988},
+\item the solvable (hence affine) primitive permutation groups of degree $< 256$ as calculated in~\cite{Short:1992},
+\item some insolvable affine primitive permutation groups of degree $< 256$ as calculated in~\cite{Theissen:1997}.
+\item The solvable primitive groups of degree up to 999 as calculated in~\cite{Eick:2002}.
+\item The primitive groups of affine type of degree up to 999 as calculated in~\cite{Roney-Dougal:2003}.
+\end{itemize}
+%Not all groups are named, those which do have names use ATLAS notation. Not all names are necessary unique!
+The list given in~\cite{Roney-Dougal:2005} is believed to be complete,
+correcting various omissions in~\cite{Dixon:1988}, \cite{Short:1992},
+and~\cite{Theissen:1997}.  (The latest version of \GAP, version 4.5, is still in
+beta-testing, but we expect it will incorporate the results
+of Coutts, Quick, and Roney-dougal~\cite{Coutts_theprimitive} cataloging all
+primitive groups of degree $< 4096$.)
+
+%% Section 41.1 of the \gap\ manual covers primitive permutation groups.  Here are some
+%% points that are important for our work.
+\begin{itemize}
+\item 
+{\tt ONanScottType( $G$ )}
+returns the type of a primitive permutation group $G$, according to the O'Nan-Scott classification. The
+labeling of the different types is not consistent in the literature, and
+\gap\ uses the following:
+\begin{itemize}
+\item 1 Affine.
+\item 2 Almost simple.
+\item 3a Diagonal, Socle consists of two normal subgroups.
+\item 3b Diagonal, Socle is minimal normal.
+\item 4a Product action with the first factor primitive of type 3a.
+\item 4b Product action with the first factor primitive of type 3b.
+\item 4c Product action with the first factor primitive of type 2.
+\item 5 Twisted wreath product.
+\end{itemize}
+As it can contain letters, the type is returned as a string.
+If $G$ is not a permutation group or does not act primitively on the points moved by it, the result is undefined.
+Some examples of primitive permutation groups of relatively
+small degree that are of types 2, 3a, 3b, and 4c are given below in Section~\ref{sec:examples-onan-scott}.
+(Note, that for groups of degree up to 2499, O'Nan-Scott types 4a, 4b and 5
+cannot occur.)
+
+
+\item {\tt SocleTypePrimitiveGroup( $G$ )}
+returns the socle type of a primitive permutation group. The socle of a primitive group is the direct product
+of isomorphic simple groups, therefore the type is indicated by a record with
+components {\tt series, parameter} 
+(both as described under IsomorphismTypeInfoFiniteSimpleGroup, see below) and width for the
+number of direct factors.
+If $G$ does not have a faithful primitive action, the result is undefined.
+
+\item\protect\footnotemark
+\footnotetext{See Section 37.15 of the \gap\ manual.}
+{\tt IsomorphismTypeInfoFiniteSimpleGroup( $G$ )}
+For a finite simple group $G$, IsomorphismTypeInfoFiniteSimpleGroup returns a record with components
+series, name and possibly parameter, describing the isomorphism type of $G$. The component name is a
+string that gives name(s) for $G$, and series is a string that describes the following series.
+(If different characterizations of $G$ are possible only one is given by series and parameter, while name may
+give several names.)
+\begin{itemize}
+\item 
+``A'' Alternating groups, parameter gives the natural degree.
+\item 
+``L'' Linear groups (Chevalley type A), parameter is a list [n,q] that indicates L(n, q).
+\item 
+``2A'' Twisted Chevalley type 2 A, parameter is a list [n,q] that indicates 2 A(n, q).
+\item 
+``B'' Chevalley type B , parameter is a list [n,q] that indicates B (n, q).
+\item 
+``2B'' Twisted Chevalley type 2 B , parameter is a value q that indicates 2 B (2, q).
+\item 
+``C'' Chevalley type C , parameter is a list [n,q] that indicates C (n, q).
+\item 
+``D'' Chevalley type D, parameter is a list [n,q] that indicates D(n, q).
+\item 
+``2D'' Twisted Chevalley type 2 D, parameter is a list [n,q] that indicates 2 D(n, q).
+\item 
+``3D'' Twisted Chevalley type 3 D, parameter is a value q that indicates 3 D(4, q).
+\item 
+``E'' Exceptional Chevalley type E , parameter is a list [n,q] that indicates En (q). The value of n is 6,7 or 8.
+\item 
+``2E'' Twisted exceptional Chevalley type E6 , parameter is a value q that indicates 2 E6 (q).
+\item 
+``F'' Exceptional Chevalley type F , parameter is a value q that indicates F (4, q).
+\item 
+``2F'' Twisted exceptional Chevalley type 2 F (Ree groups), parameter is a value q that indicates 2 F (4, q).
+\item 
+``G'' Exceptional Chevalley type G, parameter is a value q that indicates G(2, q).
+\item 
+``2G'' Twisted exceptional Chevalley type 2 G (Ree groups), parameter is a value q that indicates 2 G(2, q).
+\item 
+``Spor'' Sporadic groups, name gives the name.
+\item 
+``Z'' Cyclic groups of prime size, parameter gives the size.
+\end{itemize}
+An equal sign in the name denotes different naming schemes for the same group, a tilde sign abstract
+isomorphisms between groups constructed in a different way.
+
+\end{itemize}

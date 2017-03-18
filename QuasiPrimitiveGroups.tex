@@ -1,0 +1,107 @@
+\subsection{Quasiprimitive groups}
+\label{sec:quas-groups}
+A permutation group $X$ on a set $\Omega$ is said to be \defn{quasiprimitive} on
+$\Omega$ if each of its nontrivial normal subgroups is transitive on $\Omega$.
+In~\cite{Praeger:1993}, Praeger gives a structure theorem classifying finite
+quasiprimitive permutation groups, along the lines of the
+Aschbacher-O'Nan-Scott Theorem for finite primitive permutation groups.
+We record this theorem in this section for easy reference.
+
+
+\begin{theorem}[O'Nan-Scott Theorem, version 3] 
+A finite quasiprimitive permutation group is permutationally
+equivalent to a group of one of the types I, II, III(a), III(b), and III(c) described below.
+\end{theorem}
+
+The group $X$ below will be a quasiprimitive permutation group on a finite set $\Omega$ of size n,
+and $\alpha \in \Omega$. Let $B$ be the socle of $X$, that is the product of all
+minimal normal subgroups of $X$. Then $B\cong T^k$ with $k \geq 1$ where $T$ is
+a simple group. 
+
+\begin{enumerate}
+\item[I.] 
+\emph{Affine groups.} Here $T= \Z_p$ for some prime $p$, and $B$ is the unique minimal
+normal subgroup of $X$ and is regular on $\Omega$. of degree $n = p^k$. The set $\Omega$. can be
+identified with $B = \Z_p^k$ so that $X$ is a subgroup of the affine group $\AGL(k,p)$ with $B$
+the translation group and $X_\alpha = X \cap \GL(k,p)$ irreducible on $B$. Moreover $X$ is
+primitive on $\Omega$.
+\item[II.] \emph{Almost simple groups.} Here $k = 1$, $T$ is a nonabelian simple group,
+$T \leq X \leq \Aut T$ and $X = T X_\alpha$.
+\item[III.] In this case $B \cong T^k$ with $k\geq 2$ and $T$ a nonabelian simple group. We
+distinguish three types:
+\begin{enumerate}
+\item[III(a).] \emph{Simple diagonal action.} Define
+\[
+W = \{(a_1,\dots, a_k) \cdot \pi \mid a_i\in  \Aut T,\; \pi \in S_k, \;
+a_i \equiv a \mod \Inn T \text{ for all } i, j\},
+\]
+where $\pi \in S_k$ just permutes the components $a_i$ naturally. 
+With the obvious multiplication, $W$ is a group with socle $B\cong T^k$, 
+and $W = B . (\Out T\times S_k)$, a (not
+necessarily split) extension of $B$ by $\Out T \times S_k$. 
+We define an action of $W$ on $\Omega$ by setting
+\[
+W_\alpha = \{(a,\dots,a)\cdot \pi \mid a\in \Aut T, \, \pi \in S_k\}.
+\]
+Thus $W_a \cong \Aut T \times S_k$, $B_\alpha \cong T$ and $n = |T|^{k-1}$.
+
+For $1 \leq  i \leq k$ let $T_i$ be the subgroup of $B$ consisting of the
+$k$-tuples with 1 in all but the $i$th component, so that 
+$T_i \cong T$ and $B \cong T_1 \times \cdots \times T_k$. Put $\sT = \{T_1,
+\dots, T_k\}$, so that $W$ acts on $\sT$. 
+We say that the subgroup $X$ of $W$ is of type III(a) $B\leq X$ and,
+letting $P$ be the permutation group $X^\sT$, one of the following holds:
+\begin{enumerate}[(i)]
+\item $P$ is transitive on $\sT$,
+\item $k = 2$ and $P= 1$.
+\end{enumerate}
+We have $X_\alpha\leq  \Aut T \times P$, and $X\leq B. (\Out T\times P)$. 
+Moreover, in case (i) $B$ is the \emph{unique} minimal normal subgroup of $X$ and $X$ is
+primitive on $\Omega$ if and only if $P$ is primitive on $\sT$. 
+In case (ii) $X$ has two minimal normal subgroups $T_1$ and $T_2$, both
+regular on $\Omega$, and $X$ is primitive on $\Omega$.
+\item[III(b).] \emph{Product action.} Let $H$ be a quasiprimitive permutation group on a set $\Gamma$,
+  of type II or III(a). For $\ell > 1$, let $W = H \wr S_\ell$,, and take $W$ to
+  act on $\Gamma^\ell$ in its natural product action. Then for
+  $\gamma\in T$ and $\delta = (\gamma,\dots,\gamma)\in \Gamma^\ell$ we have
+  $W_\delta = H_\gamma \wr S_\ell$.  If $K$ is the socle of $H$ then the socle
+  $B$ of $W$ is $K^\ell$.
+
+Now $W$ acts naturally on the $\ell$ factors in $K^l$, and we say that a subgroup $X$ of $W$
+is of type III(b) if $B\leq X$, $X$ acts transitively on these $\ell$ factors, and one of the
+following holds:
+\begin{enumerate}[(i)]
+\item 
+$H$ is of type II, $K\cong T$, $k = \ell$, and $B$ is the unique minimal normal subgroup
+of $X$; further $\Gamma^\ell$ is an $X$-invariant partition of $\Omega$ and, for
+$\alpha$ in the part $\delta \in \Gamma^\ell$,
+$B_\delta = T_\gamma^k < B$ and for some nontrivial normal subgroup $R$ of
+$T_\gamma$, $B_\alpha$ is a
+subdirect product of $R^k$.
+\item 
+$H$ is of type III(a), $\Omega = \Gamma^\ell$, $K\cong T^{k/\ell}$ and $X$ and $H$ both have $m$ minimal
+normal subgroups where $m \leq 2$; if $m = 2$ then each of the two minimal
+normal subgroups of $X$ is regular on $\Omega$.
+\end{enumerate}
+\item[III(c).] \emph{Twisted wreath action.} Here $X$ is a twisted wreath
+  product $T \wr_\phi P$, defined
+as follows. (The original construction is due to B.~H.~Neumann~\cite{Neumann:1963}; 
+here we follow \cite{Suzuki:1982}, p.~269.) 
+Let $P$ have a transitive action on $\{1,...,k\}$ and let $Q$ be the stabilizer $P_1$ of
+the point $1$ in this action. We suppose that there is a homomorphism $\phi : Q \rightarrow \Aut T$
+such that $\core_P (\phi^{-1}(\Inn T)) = \bigcap_{x\in P} \phi^{-1}(\Inn T)^x = 1$. Define
+\[
+B = \{f:P\rightarrow T \mid f(pq) =f(p)^{\phi(q)} \text{ for all }
+p\in P, q\in Q\}.
+\]
+Then $B$ is a group under point-wise multiplication, and $B \cong T^k$. Let $P$
+act on $B$ by
+\[
+f^p(x)=f(px) \quad \text{ for $p,x \in P$.}
+\]
+We define $T \wr_\phi P$ to be the semidirect product of $B$ by $P$ with this action, and define
+an action of $X$ on $\Omega$, by setting $X_\alpha = P$. We then have $n = |T^k|$, and $B$ is the \emph{unique}
+minimal normal subgroup of $X$ and acts regularly on $\Omega$. We say that $X$ is of type
+III(c).
+\end{enumerate}
+\end{enumerate}

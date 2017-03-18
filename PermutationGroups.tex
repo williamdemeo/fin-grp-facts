@@ -1,0 +1,145 @@
+Let $\bG$ be a group, $\bA= \<A; \barG\>$ a \Gset, and let $\Sym(A)$ denote the group of
+permutations of $A$.
+For $a\in A$, the one-generated subalgebra $\<a\>\in \Sub[\bA]$ is
+called the \defin{orbit} of $a$ in $\bA$. 
+It is easily verified that $\<a\>$ is the set
+$ \barG a :=  \{\barg a \mid g\in G\}$, and we often use the more suggestive 
+$\barG a$ when referring to this orbit.
+
+The orbits of the \Gset\ $\bA$ partition the set $A$ into disjoint
+equivalence classes.  The equivalence relation $\sim$ is defined on $A^2$ as follows: 
+$x \sim y$ iff $\barg x = y$ for some $g\in G$.
+In fact, $\sim$ is a congruence relation of the algebra $\bA$ since,
+$x \sim y$ implies $\barg x \sim \barg y$.
+Thus, as mentioned above, each orbit is indeed a \emph{subalgebra} of $\bA$.
+
+Keep in mind that $A$ is the disjoint union of the
+orbits.  That is, if $\{a_1, \dots, a_r\}$ is a full
+set of $\sim$-class representatives, then $A = \bigcup_{i=1}^r \barG a_i$ is a disjoint union.
+
+A \Gset\ with only one orbit is called 
+\defin{transitive}.  Equivalently, $\<A, \barG\>$ is a transitive \Gset\ iff 
+$(\forall a, b \in A)(\exists g\in G)(\barg a = b)$. 
+In this case, we say that $\bG$ \emph{acts transitively} on $A$,
+and occasionally we refer to the group $G$ itself as a \emph{transitive group} of \emph{degree} $|A|$.  
+
+For $a\in A$, the set $\Stab_G(a) := \{g \in G \mid  \barg a  = a\}$ is called the 
+\defin{stabilizer} of $a$.  It is easy to verify  that $\Stab_G(a)$ is a
+subgroup of $\bG$.  An alternative notation for the stabilizer 
+is $G_a := \Stab_G(a)$.
+
+Let $\lambda : \bG \rightarrow \barG \leq \Sym(A)$ denote the permutation representation
+of $\bG$; that is, $\lambda(g) = \barg$. Then 
+\begin{equation}
+  \label{eq:111}
+\ker \lambda = \{g\in G  \mid  \barg a = a \text{ for all $a\in A$}\} = \bigcap_{a\in A}
+\Stab_G(a)
+= \bigcap_{a\in A} G_a.
+\end{equation}
+Therefore, $\bG/\ker\lambda \cong \lambda[G]\leq \Sym(A)$.
+We say that the representation $\lambda$ of $\bG$ is \defin{faithful}, or 
+that $\bG$ \emph{acts faithfully} on $A$, just in case $\ker \lambda = 1$. In
+this case $\lambda : \bG \hookrightarrow \Sym(A)$, so $\bG$ itself is isomorphic to a subgroup of 
+$\Sym(A)$, and we call $\bG$ a \defin{permutation group}.
+
+If $H \leq G$ are groups, the \defin{core} of $H$ in $G$, denoted $\core_G(H)$,
+is the largest normal subgroup of $G$ that is contained in $H$.  It is easy to see
+that
+\[
+\core_G(H) = \bigcap_{g\in G}g H g^{-1}.
+\]
+A subgroup $H$ is called \emph{core-free} provided $\core_G(H)=1$.
+
+Elements in the same orbit of a \Gset\
+have conjugate stabilizers.  Specifically, if $a, b\in A$  and $g\in G$ are
+such that $\barg a = b$, then 
+$\stab{b} = \stab{\barg a} = g \,\stab{a}\, g^{-1}$.
+If the \Gset\ happens to be transitive, then it is faithful iff the stabilizer $\stab{a}$
+is core-free in $G$. For,
+%To see this, note that if $G$ acts transitively, then $\barG a = A$ and
+\[
+\ker \lambda = \bigcap_{a\in A} \stab{a}
+= \bigcap_{g\in G} \stab{\barg a}
+= \bigcap_{g\in G} g \,\stab{a}  \,g^{-1}.
+\]
+Thus $\stab{a}$ is core-free iff $\ker \lambda = 1$ iff $G$ acts faithfully on $A$.
+
+In case $\bG$ is a transitive permutation group, we say that $\bG$ is 
+\defin{regular} (or that $\bG$ \emph{acts regularly} on $A$, or that $\lambda
+: G \rightarrow \barG$ is a \emph{regular representation})
+provided $\stab{a} = 1$ for each $a\in A$; i.e.,
+every non-identity element of $G$ is fixed-point-free.\footnote{The action of a
+  regular permutation group is sometimes called a ``free'' action.} Equivalently,
+$G$ is regular on $A$ iff for each $a, b \in A$ there is a unique $g\in G$ such
+that $\barg a = b$.  In particular, $|G| = |A|$.
+
+A \defin{block system} for $G$ is a partition of $A$
+  that is preserved by the action of $G$.  In other words, a block system is a
+  congruence relation of the algebra $\bA = \<A,\barG\>$.
+The \defin{trivial block systems} are $0_A = |a_1|a_2|\cdots|a_i|\cdots$ and 
+$1_A = |a_1 a_2 \cdots a_i \cdots|$.  The non-trivial block systems are called \defin{systems of imprimitivity}.
+
+A nonempty subset $B\subseteq A$ is a \defin{block} for $\bA$ 
+if for each $g \in G$ either $\barg B = B$ or $\barg B \cap B = \emptyset$.
+
+Let $\bA = \<A, \barG\>$ be a transitive \Gset.  
+We say that the group $\bG$ is \defin{primitive} if $\bA$ has no systems of imprimitivity;
+otherwise $\bG$ is called \defin{imprimitive}. 
+Note that we only use the terms ``primitive'' and ``imprimitive''
+with reference to a \emph{transitive} \Gset.
+
+%% \item[{\small {\it blocks}}] Let $\bA = \<A,\barG\>$ be a transitive \Gset.
+%% A nonempty subset $B\subseteq A$ is called a \defin{block} for $\bA$ 
+%% if for each $g \in G$ either $\barg B = B$ or $\barg B \cap B = \emptyset$.  (We will
+%% call such $B$ a block if the underlying \Gset\ is clear from context.)
+
+%% For example, every transitive \Gset\ $\<A, \barG\>$ has $A$ and the 
+%% singletons $\{a\}\; (a \in A)$ as blocks; these are called the 
+%% \emph{trivial blocks}. Any other block is called \emph{nontrivial}. 
+%% A block which is minimal in the set of all blocks of size $> 1$ is called a
+%% \emph{minimal block}. 
+
+%% If $B$ and $C$ are blocks of a transitive \Gset\
+%% containing a common point, then $B \cap C$ is also a block. More,
+%% generally, any intersection of blocks containing a common point is again a
+%% block.
+
+%% The importance of blocks arises from the following observation. 
+%% Suppose that $\bA = \<A,\barG\>$ is a transitive \Gset\ 
+%% and that $B$ is a block for $\bA$.  
+%% Put $\beta = \{\barg B  \mid  g\in G\}$. 
+%% Then the sets in $\beta$ form a partition of $A$ 
+%% and each element of $\beta$ is a block. 
+%% We call $\beta$ the system of blocks containing $B$.
+%% Now $\bG$ acts on $\beta$ in an obvious way, and this new action may give useful
+%% information about $\bG$ provided $B$ is not a trivial block.
+
+
+%%% The following is already included in the body:
+%% \begin{theorem}
+%% Let $\bA = \<A,\barG\>$ be a transitive \Gset\
+%% and let $a \in A$. Let $\sB$ be the set of all blocks $B$ with $a\in B$.
+%% Let $[\stab{a},G] \subseteq \Sub[\bG]$ denote the set of all subgroups of $\bG$ 
+%% containing $\stab{a}$.  Then there is a
+%% bijection $\Psi :\sB \rightarrow [\stab{a},G]$ given by $\Psi(B)= G(B)$,
+%% with inverse mapping $\Phi: [\stab{a},G] \rightarrow \sB $ 
+%% given by $\Phi(H) = \barH a = \{\barh a  \mid  h\in H\}$. 
+%% The mapping $\Psi$ is order-preserving in the sense
+%% that if $B_1, B_2 \in  \sB$ then 
+%% $B_1\subseteq B_2 \Leftrightarrow \Psi(B_1) \leq \Psi(B_2)$.
+%% \end{theorem}
+%% Briefly, the poset $\<\sB, \subseteq\>$ is order-isomorphic to the poset $\<[\stab{a},G], \leq \>$.
+
+%% \begin{corollary}
+%% Let $\bG$ act transitively on a set with at least two points.
+%% %$\bA = \<A, \barG\>$ be a transitive \Gset\ with on a set n with at
+%% Then $\bG$ is primitive if and only if each stabilizer $\stab{a}$ is a
+%% maximal subgroup of $\bG$.
+%% \end{corollary}
+
+%% Since the point stabilizers of a transitive group are all conjugate, 
+%% one stabilizer is maximal only when all of the stabilizers are maximal. 
+%% In particular, a regular permutation group is primitive if and only if it has prime
+%% degree. 
+
+
