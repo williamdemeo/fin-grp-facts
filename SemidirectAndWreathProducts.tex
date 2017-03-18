@@ -1,0 +1,78 @@
+This note describes some semidirect and wreath product constructions that I
+recently learned about from some responses to my questions on MathOverflow.net.
+
+John Shareshian responded to my question~\cite{MO63675} about which finite
+groups contain $M_4$ as an upper interval, as follows.
+If $H$ has trivial core in $G$ and $[H,G]\cong M_4$, then one of the following holds:
+\begin{enumerate}
+\item 
+$G$ is the semidirect product $H(V+V)$, where $V$ is an irreducible
+$F_3[H]$-module such that the only elements of $\GL(V)$ commuting with $H$ are
+the scalar transformations 1 and -1. 
+
+(This case occurs when every maximal subgroup containing $H$ has nontrivial core
+in $G$. Your example $C_2:(C_3\times C_3)$ is of this type. This condition
+should be sufficient and you can construct tons of examples of this type without
+too much trouble.) 
+
+\item $G$ is the semidirect product $MV$, where $V$ is an irreducible
+  $F_3[M]$-module. There is a 1-dimensional subspace $W$ of $V$ such that
+  $H=N_M(W)=C_M(W)$, and $C_V(H)=W$. In particular, no element of $M$ has $W$ as an
+  eigenspace with eigenvalue -1. 
+
+(This case occurs when some maximal $M$ containing $H$ has trivial core in $G$. Your
+example $S_3$ is of this type. I don't know if there are lots of examples with $H$
+maximal in $M$.) 
+\end{enumerate}
+
+In response to question~\cite{MO62495}, F.~Ladisch told me about the following
+wreath product construction:
+Let $H < G$ with $\Core_G(H) =  (e)$.  The $G$ acts faithfully on the cosets of
+$H$, so identify $G$ with a transitive permutation group. Assume $G \leq
+\Sym(\Gamma)$ is transitive, and suppose $X$ is a transitive permutation group
+acting on the set $\Omega$. The \emph{wreath product}
+of $G$ with $X$ is the semi-direct product 
+\[
+W=G^{\Omega} \rtimes X 
+\]
+Note that $G^{\Omega}$ is simply the set of maps $\{f:\Omega \rightarrow G\}$
+with group multiplication given by the pointwise multiplication of the
+coordinates 
+\[
+(f(\omega))_{\Omega} (h(\omega))_{\Omega} = (f(\omega) h(\omega))_{\Omega}  
+\qquad (f, h \in G^\Omega).
+\]
+The group $X$ acts on the group $G^{\Omega}$ by the rule:
+\[
+f^x = (f(\omega^x))_{\Omega} \qquad (x\in X, f\in G^\Omega).
+\]
+so multiplication in the group $W$ is given by
+\[
+(f,x) (h,y) = fxhy = f h^x x y =(f h^x, x y) \qquad (x, y \in X, f, h\in G^\Omega).
+\]
+The group $W$ acts on the set $\Omega \times \Gamma$ by 
+\[
+(f,x) (\gamma, \omega) = \dots
+\]
+\[
+(\omega, \gamma)(x,f) =  
+(\omega x, \gamma((\omega x)f)), \quad \text{ where $f: \Omega \rightarrow G$
+  and thus $(\omega x) f \in G$.}
+\]
+The stabilizer of $(\omega, \gamma)$ is then 
+\[
+W_{(\omega, \gamma)} = X_\omega \ltimes (G_\gamma \times G \times \cdots \times G)
+\]
+(where the component $G_\gamma$ occurs, strictly speaking, at position $\omega$). 
+Now it is not difficult to see, that if a subgroup $K$ with 
+$W(\omega, \gamma)\leq K$ contains an element $(x,f)$ with $x\notin X_\omega$,
+then $K$ contains $G\times G\times \cdots \times G$. So either $K$ has the form
+$Y\ltimes (G^\Omega)$ with $X_\omega < Y\leq X$, or it has the form
+$X_\omega\ltimes (I\times G\times \cdots \times G)$ with $G_\gamma \leq I \leq G$.
+So the interval $[W(\omega,\gamma),W]$ is lattice isomorphic to the lattice
+obtained by putting $[X\omega,X]$ on top of $[G_\gamma,G]$. If the latter are
+chains, then you get a chain, where the lengths add. Starting with a primitive
+permutation group (non-solvable, if you wish) and repeating this contruction,
+you get arbitrarily large chains. Even if you are interested in non-solvable
+groups, I mention that the Sylow $p$-subgroup of $S_{p^n}$ is a special case of
+this contruction.  

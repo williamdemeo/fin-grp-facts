@@ -1,0 +1,279 @@
+%% FILE: loc-diff-terms-ijac.tex
+%% AUTHOR: William DeMeo, Ralph Freese
+%% DATE: 1 Dec 2016
+%% COPYRIGHT: (C) 2016 William DeMeo 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                         BIBLIOGRAPHY FILE            %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% The `filecontents` command will crete a file in the inputs directory called 
+%% refs.bib containing the references in the document, in case this file does 
+%% not exist already.
+%% If you want to add a BibTeX entry, please don't add it directly to the
+%% refs.bib file.  Instead, add it in this file between the
+%% \begin{filecontents*}{refs.bib} and \end{filecontents*} lines
+%% then delete the existing refs.bib file so it will be automatically generated 
+%% again with your new entry the next time you run pdfaltex.
+\begin{filecontents*}{refs.bib}
+@book {Rose:1978,
+    AUTHOR = {Rose, John S.},
+     TITLE = {A course on group theory},
+      NOTE = {Reprint of the 1978 original [Cambridge University Press;  MR0498810 (58
+              \#16847)]},
+ PUBLISHER = {Dover Publications Inc.},
+   ADDRESS = {New York},
+      YEAR = {1994},
+     PAGES = {x+310},
+      ISBN = {0-486-68194-7},
+   MRCLASS = {20-01},
+  MRNUMBER = {1298629},
+}
+@MISC {MO63675,    
+    TITLE = {What groups have a second maximal subgroup below exactly four maximal subgroups?},    
+    AUTHOR = {William DeMeo},
+    HOWPUBLISHED = {MathOverflow},    
+    NOTE = {URL: \url{http://mathoverflow.net/questions/63675} (version: 2011-05-02)},    
+    EPRINT = {http://mathoverflow.net/questions/63675},    
+    URL = {http://mathoverflow.net/questions/63675},    
+}
+@COMMENT (mathoverflow.net/users/9124)},    
+@MISC {MO62495,    
+    TITLE = {Which finite nonabelian groups have long chains of subgroups as intervals in their subgroup lattice?},    
+    AUTHOR = {William DeMeo (mathoverflow.net/users/9124)},    
+    HOWPUBLISHED = {MathOverflow},    
+    NOTE = {URL: \url{http://mathoverflow.net/questions/62495} (version: 2011-04-21)},    
+    EPRINT = {http://mathoverflow.net/questions/62495},    
+    URL = {http://mathoverflow.net/questions/62495},    
+}
+@book {Suzuki:1982,
+    AUTHOR = {Suzuki, Michio},
+     TITLE = {Group theory. {I}},
+    SERIES = {Grundlehren der Mathematischen Wissenschaften [Fundamental
+              Principles of Mathematical Sciences]},
+    VOLUME = {247},
+      NOTE = {Translated from the Japanese by the author},
+ PUBLISHER = {Springer-Verlag},
+   ADDRESS = {Berlin},
+      YEAR = {1982},
+     PAGES = {xiv+434},
+      ISBN = {3-540-10915-3},
+   MRCLASS = {20-01},
+  MRNUMBER = {648772 (82k:20001c)},
+MRREVIEWER = {B. Chang},
+}
+@Book{Hungerford:1974,
+  author =       {Thomas W.~Hungerford},
+  title =        {Algebra},
+  year =         {1974},
+  publisher =    {Springer-Verlag},
+  address =      {New York}
+}
+@book {Dixon:1996,
+    AUTHOR = {Dixon, John D. and Mortimer, Brian},
+     TITLE = {Permutation groups},
+    SERIES = {Graduate Texts in Mathematics},
+    VOLUME = {163},
+ PUBLISHER = {Springer-Verlag},
+   ADDRESS = {New York},
+      YEAR = {1996},
+     PAGES = {xii+346},
+      ISBN = {0-387-94599-7},
+   MRCLASS = {20B05 (20-01 20B07)},
+  MRNUMBER = {1409812 (98m:20003)},
+MRREVIEWER = {Martin W. Liebeck},
+}
+\end{filecontents*}
+%:biblio
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                     PREAMBLE                                   %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[leqno,twoside]{article}
+\headsep 0.5cm \pagestyle{myheadings}
+\usepackage{amssymb,amsmath,latexsym, amsthm,enumerate, nsjom, amsfonts}
+\title{}\author{}\date{}
+\markboth{W.~DeMeo}{Facts on Finite Groups}\setcounter{page}{1}
+%% \usepackage[dvipdfm, pdfstartview=FitH]{hyperref} % Use LaTeX and then DVI2PDF,
+% or, if you plan to use packages only compatible with PDFLaTeX
+\usepackage[pdftex, pdfstartview=FitH]{hyperref}
+
+%% \usepackage{graphicx}
+% Use this package if you plan to put some pictures
+
+%% \usepackage{pinlabel}  %%% was the recommended graphics+labelling package for JLA
+
+%If you want equations number as (2.1), where, 2 is the section number then use
+\numberwithin{equation}{section} %You may omit this line if you want numbering as (1)
+
+ \newtheorem{thm}{Theorem}[section]
+ \newtheorem*{theorem}{Theorem}        % theorem environment without numbering
+ \newtheorem{cor}[thm]{Corollary}
+ \newtheorem*{corollary}{Corollary}     % Corollary environment without numbering 
+ \newtheorem{lem}[thm]{Lemma}
+ \newtheorem*{lemma}{Lemma}            % Lemma environment without numbering 
+ \newtheorem*{zlem}{Zorn's Lemma}      % A special unnumbered lemma.
+ \newtheorem*{monotonicity}{Monotonicity of the Commutator} % A special unnumbered lemma.
+ \newtheorem{prop}[thm]{Proposition}
+
+ \theoremstyle{definition}
+ \newtheorem{defn}[thm]{Definition}
+ \newtheorem{prob}{Problem}    
+ \newtheorem{ex}[thm]{Example}
+
+ \theoremstyle{remark}
+ \newtheorem{rem}[thm]{Remark}
+ \newtheorem{Fact}{Fact}[section]
+ \newtheorem{remarks}{Remarks}
+
+
+
+ \usepackage[paperwidth=165mm, paperheight=235mm, twoside, hmargin={25mm,20mm}, vmargin={20mm,20mm} ]{geometry}
+
+% You may use some variations of this environments, for instance, with separate global counters
+% \newtheorem{defn}{Definition}
+% Also, you may use your own names for environments like
+% \newtheorem{df}{Definition}
+% or whatever you prefer, but, please, use them
+
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ %%% MY STUFF
+ \usepackage{macros}
+ \usepackage{comment}
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ %% showkeys: just comment out in the final version
+ \usepackage[notref,notcite]{showkeys}
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ %% removed these for jla
+ % \usepackage{amsmath,amssymb,amsthm} %, amsmath are included by default}
+ %% \usepackage{amscd}
+ \usepackage{mathtools}
+ % \usepackage{scrextend}
+ \usepackage{lmodern}% http://ctan.org/pkg/lm
+ %\usepackage{bm}
+ \usepackage{latexsym,enumerate,scalefnt,ifthen} %,mathrsfs,
+ \usepackage{stmaryrd}
+ \SetSymbolFont{stmry}{bold}{U}{stmry}{m}{n}
+ \usepackage[mathscr]{euscript}
+ %% \usepackage[colorlinks=true,urlcolor=black,linkcolor=black,citecolor=black]{hyperref}
+ \usepackage{scalefnt}
+ \usepackage{tikz}
+ \usepackage{color}
+ %% \usepackage[margin=1.5in]{geometry}
+
+ \newboolean{todos}
+ \setboolean{todos}{true}  % set to true to include TODO statements
+ %   \setboolean{todos}{false}  % set to false to exclude TODO statements
+
+   %%% INTENDED USE OF THE arxiv AND extralong BOOLEAN VARIABLES
+   %%% -- The brief journal version should have `arxiv` and `extralong` variables set to false.
+   %%% -- The arxiv version should have `arxiv` set to true and `extralong` set to false.
+   %%% -- The extralong version may contain notes intended for our own personal reference.
+   %%%    For the extralong version, set both `arxiv` and `extralong` to true.   
+   \newboolean{arxiv}
+   \setboolean{arxiv}{true}  % set to true to include almost everything
+   \setboolean{arxiv}{false}  % set to false for the brief version
+
+   \newboolean{extralong}
+   \setboolean{extralong}{true}  % set to true to include everything
+   %% \setboolean{extralong}{false}  % set to false for the long (but not too long) version
+
+   \newboolean{footnotes}
+   \setboolean{footnotes}{true}  % set to true to include footnotes
+   \setboolean{footnotes}{false}  % set to false for no footnotes
+
+
+   \newboolean{draftsecskip}
+   \setboolean{draftsecskip}{true}
+   % \setboolean{draftsecskip}{false}
+
+   \newboolean{thetanotation}
+   \setboolean{thetanotation}{true}
+   \setboolean{thetanotation}{false}
+
+
+   % \newcommand\draftsecskip{\ifthenelse{\boolean{draftsecskip}}{\medskip}{}}
+   \newcommand\draftsecskip{\ifthenelse{\boolean{draftsecskip}}{\newpage}{}}
+
+   %%%% wjd: adding pagebreaks for ``draft mode'' to reduce printing costs
+   %%%%      To turn off these unnecessary page breaks, set `draft` to false:
+   \newboolean{draft}
+   \setboolean{draft}{true}  % set to true to include footnotes
+
+   
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% End of user-defined macros %%%
+
+
+\begin{document}
+\thispagestyle{empty}
+
+% \begin{flushleft}
+% \vspace*{-1.1cm} {\sc  Novi Sad J.\ Math.}\\ {\sc Vol.\ XX, No.\ Y, 20ZZ, ??-??}
+% \end{flushleft}
+\begin{flushright}
+\vspace*{-1.1cm} {{\small \sffamily Last updated: 17 March 2017}}
+\end{flushright}
+\vspace{0.8cm}
+% PRAVLJENJE NASLOVA
+\begin{center}
+  {\large \bf FACTS ON FINITE GROUPS: a smorgasbord of known facts, experimental data and other trivia
+    %\footnote{This is one place where you can put acknowledgement}
+} \vspace*{3mm}
+
+% Title should be in upper case
+
+{\bf William DeMeo\footnote{Department of Mathematics, University of Hawaii,\\
+    e-mail: \href{mailto:williamdemeo@gmail.com}{williamdemeo@gmail.com}}}
+\end{center}
+% Authors should be ordered alphabetically
+% Please, use your full name and put an email address in affiliation. The example with underline in e-mail address:
+%\href{mailto:my_address@wikibooks.org}{my\_address@wikibooks.org}
+
+\begin{abstract}
+  We present here a rough and unpolished collection of potentially useful facts
+  about finite groups, most (if not all) of which are well known. Much of this information
+  appeared in disparate notes from research seminars, and the author received requests
+  to collect this information and post it somewhere for reference and so that it may be easily
+  cited in other works.  With this purpose in mind, the proper BibTeX data are displayed on the
+  last page below.
+\end{abstract}
+
+%%%%%%%%%%%%%%%%%%%%   Start of main body of article
+
+
+\section{Examples of Cayley's Theorem on Permutation Representations of Finite Groups}
+\label{sec:introduction}
+\input{RepresentationsTheory.tex}
+\input{RepresentationsExamples.tex}
+
+\section{The Symmetric Group on Four Letters}
+\input{S4.tex}
+
+\subsection{Subgroups of the Symmetric Group on Four Letters}
+\input{S4Subgroups.tex}
+
+\newpage
+\section{Decompositions}
+\subsection{Subdirect Products}
+\input{SDProductsOfGroups.tex}
+
+\subsection{Semidirect and Wreath Products}
+\input{SemidirectAndWreathProducts.tex}
+
+\section{Congruence Lattices of Transitive G-sets}
+\input{CongLatTransGsets.tex}
+
+
+%%%%%%%%%%%%%%%%%%%%   End of main body of article
+%
+%                             References
+%
+%   BiBTeX users uncomment the following line:
+%
+\bibliographystyle{plainurl} %jloganal}
+%
+\bibliography{refs}
+
+%%%%%%%%%%% TOTO: Insert bibtex data here!! %%%%%%%%%%%%%%%%%%5
+
+\end{document}
+
+

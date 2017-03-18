@@ -1,0 +1,159 @@
+Let $X$ be a finite set and consider the set $X^X$ of all maps from $X$ to
+itself, which, when endowed with composition of maps and the identity mapping,
+forms a monoid, $\<X^X; \circ, \id{X}\>$.  The submonoid $S_X$ of all bijective
+maps in $X^X$ is a group, the \emph{symmetric group on $X$}.  When the
+underlying set isn't important, we write $S_n$ to denote the generic
+symmetric group on an $n$-element set. 
+
+If we have defined some set $F$ of basic operations on $X$, so that
+$\bX = \<X; F\>$ is an algebra, then two other important submonoids of
+$X^X$ are $\End(\bX)$, the set of maps in $X^X$ which respect all 
+operations in $F$, and $\Aut(\bX)$, the set of bijective maps in  $X^X$ which
+respect all operations in $F$.  It is apparent from the definition that
+ $\Aut(\bX)= S_X \cap \End(\bX)$, and  $\Aut(\bX)$ is a submonoid of $\End(\bX)$
+ and a subgroup of $S_X$.  These four fundamental monoids
+ associated with the algebra $\bX$ are shown in the diagram below. 
+
+\begin{center}
+  \begin{tikzpicture}[scale=.7]
+%    \node (Aut) at (0,0) [fill,circle,inner sep=1pt] {};
+    \draw[font=\small] (0,0) node {$\Aut(\bX)$};
+%    \node (End) at (-2,2) [fill,circle,inner sep=1pt] {};
+    \draw[font=\small] (-2,2) node {$\End(\bX)$};
+%    \node (Sx) at (2,2) [fill,circle,inner sep=1pt] {};
+%    \draw[font=\small] (2,2) node {$S_X$};
+    \draw (2,2) node {$S_X$};
+%    \node (XX) at (0,4) [fill,circle,inner sep=1pt] {};
+%    \draw[font=\small] (0,4) node {$X^X$};
+    \draw (0,4) node {$X^X$};
+    \draw[font=\small] (-1,1) node {\rotatebox[origin=c]{130}{$\leq$}};
+    \draw[font=\small] (1,1) node {\rotatebox[origin=c]{45}{$\leq$}};
+    \draw[font=\small] (1,3) node {\rotatebox[origin=c]{130}{$\leq$}};
+    \draw[font=\small] (-1,3) node {\rotatebox[origin=c]{45}{$\leq$}};
+
+%    \draw[semithick]    (Aut) to (End) to (XX) to (Sx) to (Aut);
+  \end{tikzpicture}
+\end{center}
+
+
+Given a finite group $G$, and an algebra $\bX = \<X; F\>$, a
+\emph{representation} of $G$ on $\bX$ is a group homomorphism
+from $G$ into $\Aut(\bX)$.  That is, a representation of $G$ is a mapping
+$\varphi : G \rightarrow \Aut(\bX)$ which satisfies $\varphi(g_1 g_2) =
+\varphi(g_1) \circ \varphi(g_2)$, where (as above) $\circ$ denotes composition
+of maps in $\Aut(\bX)$.
+
+Thus, a representation defines an action by $G$ on the set $X$: $\bar{g} x =
+\varphi(g)(x)$.  If $\bar{G} = \varphi[G]$ denotes the image of $G$ under
+$\varphi$, then $\< X; \bar{G}\>$ is a G-set.\footnote{More generally, a G-set is
+  sometimes defined to be a pair $(X, \varphi)$, where $\varphi$ is a homomorphism from
+  a group into the symmetric group $S_X$; see e.g.~\cite{Suzuki:1982}.}  
+The action is called
+\emph{transitive} iff for each pair $x, y \in X$ there is some $g\in G$ such
+that $\varphi(g)(x) = y$. The representation $\varphi$ is called \emph{faithful}
+iff it is a monomorphism, in which case $G$ is isomorphic to its image under
+$\varphi$, which is a subgroup of $\Aut(\bX)$.  We also say, in this case, that
+the group acts faithfully, and call it a \emph{permutation group}.
+A group which acts transitively on some set is called a \emph{transitive group}.
+Without specifying the set, however, this term is meaningless, since
+every group acts transitively on some sets and intransitively on others.  
+A representation $\varphi$ is called transitive iff the resulting action is transitive.
+
+Two special cases are almost always what one means when one speaks of a
+representation of a finite group.  They are the so called
+\begin{itemize}
+\item \emph{linear representations}, where $\bX = \<X; +, \circ, -, 0, 1, \F\>$ is a finite dimensional vector
+  space over a field $\F$, so $\Aut(\bX)$ is the set of invertible matrices with entries from $\F$;
+\item \emph{permutation representations}, where $\bX = X$ is just a set, so $\Aut(\bX) = S_X$.
+\end{itemize}
+
+% Given a group $G$, there is a set of natural permutation representations of $G$
+% associated with the (conjugacy classes of) subgroups of $G$.  Let $H$ be any
+% subgroup of $G$ and consider the set $X = G/H = \{H, x_1H, \dots, x_{r-1}H\}$ of
+% left cosets of $H$. 
+The following elementary theorem tells us precisely when a particular group $G$
+has a transitive permutation representation on a set of size $n$.
+The theorem is easy to prove.\footnote{See, e.g., \cite{Suzuki:1982} Theorem
+  7.16.}
+\begin{theorem}
+  Let $G$ be a group.  The following three conditions are equivalent.
+  \begin{enumerate}[(i)]
+  \item There is a transitive permutation representation of $G$ on a set of size
+    $n$.
+  \item There is a homomorphism from $G$ into $S_n$ such that the image of $G$
+    is transitive. 
+  \item The group $G$ has a subgroup of index $n$.
+  \end{enumerate}
+\end{theorem}
+
+\newcommand{\Core}{\ensuremath{\mathrm{Core}}}
+For a given group $G$, and any subgroup $H< G$,
+we define a transitive permutation representation of $G$, which we
+denote $\rho_H$.  Specifically, $\rho_H$ is a group homomorphism from $G$ into
+the symmetric group $\Sym(G/H)$ of permutations on the set $G/H = \{H, Hx_1,
+Hx_2, \dots \}$ of \emph{right} cosets of $H$ in $G$.
+The action is simply right-multiplication by elements of $G$. That is:
+% \footnote{We could have defined the action, $\lambda_H: G
+%   \rightarrow G/H$, on the \emph{left} cosets of $H$ in $G$, where $\lambda_H(g)$
+%   is \emph{left}-multiplication by $g$.  
+\[
+\rho_H : G \rightarrow \Sym(G/H), \quad \text{ where } \quad 
+\rho_H(g)(Hx)= Hxg.
+\]
+
+With this set-up, to check the homomorphism property of $\rho_H$, 
+we should write the permutation mappings in $\Sym(G/H)$ on the
+right of their arguments, as in $Hx \rho_H(g) = Hxg$.  For then we have
+% $Hx \rho_H(g_1 g_2) = Hx (g_1 g_2) = Hx g_1 g_2 = Hx\rho_H(g_1)\rho_H(g_2)$; 
+% i.e.~$\rho_H(g_1 g_2) = \rho_H(g_1)\rho_H(g_2)$.}
+\[
+Hx \rho_H(g_1 g_2) = Hx (g_1 g_2) = Hx g_1 g_2 = Hx\rho_H(g_1)\rho_H(g_2);
+\] 
+i.e.~$\rho_H(g_1 g_2) = \rho_H(g_1)\rho_H(g_2)$.
+
+For each $Hx \in G/H$, the \emph{point stabilizer} of $Hx$ is 
+\[
+G_{Hx} = \{g\in G : Hxg = Hx \} = 
+\{g\in G : Hxgx^{-1}  = H \} = 
+%\{x g x^{-1}\in G : g H = H \} = 
+x^{-1} G_H x  = x^{-1} H x = H^x,
+\]
+so the kernel of the homomorphism $\rho_H$ is 
+\[
+\ker \rho_H = \{g\in G : \forall x \in G,\; Hxg = Hx \} = 
+%\bigcap_{x\in G} \{g\in G : x^{-1}gx H = H \} = 
+\bigcap_{x\in G} x^{-1} H x = \bigcap_{x\in G} H^x.
+\]
+Note that $\ker \rho_H$ is the largest normal subgroup of $G$ 
+contained in $H$, also known as the \emph{core of $H$ in $G$}, which we denote
+by 
+\[
+\Core_G(H) = \bigcap_{x\in G} H^x.
+\]
+
+Next we describe (up to equivalence) all transitive permutation
+representations of a given group $G$.  
+We call two representations (or actions) \emph{equivalent}
+iff the associated $G$-sets are isomorphic. 
+The foregoing implies that every transitive permutation representation of $G$ is
+equivalent to $\rho_H$ for some subgroup $H < G$.  The following
+lemma\footnote{Lemma 1.6B of \cite{Dixon:1996}.} 
+shows that we need only consider a single representative $H$ from each of the
+conjugacy classes of subgroups.  
+
+\begin{lemma}
+Suppose $G$ acts transitively on two sets,
+$A$ and $B$.  Fix $a\in A$ and let $G_a$ be the stabilizer of $a$ (under the first
+action).  Then the two actions are equivalent
+if and only if the subgroup $G_a$ is also a stabilizer under the second action
+of some point $b\in B$. 
+\end{lemma}
+
+The point stabilizers of the action $\rho_H$ described above are the
+conjugates of $H$ in $G$.  Therefore, the lemma implies that, for any two
+subgroups $H, K \leq G$, the representations $\rho_H$ and $\rho_K$ are
+equivalent precisely when $K = x^{-1} Hx$ for some $x\in G$. 
+Hence, the transitive permutation representations of $G$ are given, up to
+equivalence, by $\rho_{K_i}$ as $K_i$ runs over a set of representatives of
+conjugacy classes of subgroups of $G$.   
+
