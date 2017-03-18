@@ -1,4 +1,4 @@
-\section{Introduction: a very few, very basic commands}
+\section{Preliminaries: a few basic commands}
 \begin{enumerate}[a.]
 \item {\bf Help.}  A convenient way of reading the documentation at the gap prompt is
  with the {\tt ?} symbol, as in:
@@ -282,7 +282,6 @@ The p-core of G is the largest normal p-subgroup of G. It is the core of a p-Syl
 subgroup of G.
   \end{itemize}
 
-\newpage
 %\subsection{Sets of Subgroups\protect\footnotemark}
 %\footnotetext{{\it Ibid.}, sec.~37.19.}
 \subsection{Sets of Subgroups}
@@ -316,7 +315,7 @@ This attribute returns a list of all conjugacy classes of subgroups of the group
 $G$. It also is applicable for lattices of subgroups. The order in which the classes
 are listed depends on the method chosen by \gap. For each class of subgroups, a
 representative can be accessed using {\tt Representative}.%\footnote{{\it Ibid.}, sec.~28.3.7.}
-{\codesize
+{\scriptsize
 \begin{verbatim}
 gap> ConjugacyClassesSubgroups( g );
 [ Group( () )^G, Group( [ (1,3)(2,4) ] )^G, Group( [ (3,4) ] )^G,
@@ -353,7 +352,7 @@ instead.)
 {\codesize
 \begin{verbatim}
 gap> MaximalSubgroups( Group((1,2,3),(1,2)) );
-[ Group([ (1,2,3) ]), Group([ (2,3) ]), Group([ (1,2) ]), Group([ (1,3) ]) ]
+[Group([ (1,2,3) ]), Group([ (2,3) ]), Group([ (1,2) ]), Group([ (1,3) ])]
 \end{verbatim}}
 
 \item {\tt NormalSubgroups( $G$ )}\\
@@ -372,16 +371,17 @@ is a list containing those proper normal subgroups of the group $G$ that are max
 normal subgroups.
 {\codesize
 \begin{verbatim}
-gap> MaximalNormalSubgroups( g );
-[ Group([ (2,4,3), (1,4)(2,3), (1,3)(2,4) ]) ]
+    gap> MaximalNormalSubgroups( g );
+    [ Group([ (2,4,3), (1,4)(2,3), (1,3)(2,4) ]) ]
 \end{verbatim}}
 
 \item {\tt MinimalNormalSubgroups( $G$ )}\\
-is a list containing those nontrivial normal subgroups of the group $G$ that are minimal among the nontrivial
-normal subgroups.
+  is a list containing those nontrivial normal subgroups of the group $G$ that
+  are minimal among the nontrivial normal subgroups.
 {\codesize
 \begin{verbatim}
-gap> MinimalNormalSubgroups( g );  # returns [ Group([ (1,4)(2,3), (1,3)(2,4) ]) ]
+    gap> MinimalNormalSubgroups( g );  
+    [ Group([ (1,4)(2,3), (1,3)(2,4) ]) ]
 \end{verbatim}}
 \end{itemize}
 \subsectionspace
@@ -434,7 +434,7 @@ We now list some subgroup lattice commands that are available in the standard
 computes the lattice of subgroups of the group $G$. This lattice has the conjugacy
 classes of subgroups as attribute {\tt ConjugacyClassesSubgroups} and permits one to
 test maximality/minimality relations.
-{\codesize
+{\scriptsize
 \begin{verbatim}
 gap> g := SymmetricGroup( 4 );;  l := LatticeSubgroups( g );
 <subgroup lattice of Sym( [ 1 .. 4 ] ), 11 classes, 30 subgroups>
@@ -504,9 +504,9 @@ Group([ (1,3), (1,3,4) ])
 \end{verbatim}}
 \end{itemize}
 
-\newpage
+\medskip
 
-\section{Subgroup series\protect\footnotemark} 
+\subsection{Subgroup series\protect\footnotemark} 
 \footnotetext{See also the \gap\ Manual~\cite{gapmanual}, page 370.}
 In group theory many subgroup series are considered, and \gap\ provides commands to
 compute them. 

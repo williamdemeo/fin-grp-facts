@@ -14,6 +14,30 @@
 %% then delete the existing refs.bib file so it will be automatically generated 
 %% again with your new entry the next time you run pdfaltex.
 \begin{filecontents*}{refs.bib}
+@Manual{gaptutorial,
+  title = 	 {GAP: A Tutorial},
+  OPTkey = 	 {},
+  author = 	 {The GAP Group},
+  OPTorganization = {},
+  address = 	 {http://www.gap-system.org},
+  Optedition = 	 {},
+  month = 	 {December},
+  year = 	 {2008},
+  note = 	 {Release 4.4.12},
+  OPTannote = 	 {}
+}
+@Manual{gapmanual,
+  title = 	 {GAP: Reference Manual},
+  OPTkey = 	 {},
+  author = 	 {The GAP Group},
+  OPTorganization = {},
+  address = 	 {http://www.gap-system.org},
+  Optedition = 	 {},
+  month = 	 {December},
+  year = 	 {2008},
+  note = 	 {Release 4.4.12},
+  OPTannote = 	 {}
+}
 @book {Rose:1978,
     AUTHOR = {Rose, John S.},
      TITLE = {A course on group theory},
@@ -209,7 +233,7 @@ pages={154--183}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                                     PREAMBLE                                   %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\documentclass[leqno,twoside,draft]{article}
+\documentclass[leqno]{article}
 \headsep 0.5cm \pagestyle{myheadings}
 \usepackage{amssymb,amsmath,latexsym, amsthm,enumerate, nsjom, amsfonts}
 \title{}\author{}\date{}
@@ -217,7 +241,7 @@ pages={154--183}
 %% \usepackage[dvipdfm, pdfstartview=FitH]{hyperref} % Use LaTeX and then DVI2PDF,
 % or, if you plan to use packages only compatible with PDFLaTeX
 \usepackage[pdftex, pdfstartview=FitH]{hyperref}
- \usepackage{booktabs}
+\usepackage{booktabs}
 
 %% \usepackage{graphicx}
 % Use this package if you plan to put some pictures
@@ -261,10 +285,6 @@ pages={154--183}
  %%% MY STUFF
  \usepackage{macros}
  \usepackage{comment}
- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- %% showkeys: just comment out in the final version
- \usepackage[notref,notcite]{showkeys}
- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  %% removed these for jla
  % \usepackage{amsmath,amssymb,amsthm} %, amsmath are included by default}
  %% \usepackage{amscd}
@@ -307,7 +327,7 @@ pages={154--183}
 
    \newboolean{draftsecskip}
    \setboolean{draftsecskip}{true}
-   % \setboolean{draftsecskip}{false}
+   \setboolean{draftsecskip}{false}
 
    \newboolean{thetanotation}
    \setboolean{thetanotation}{true}
@@ -320,8 +340,13 @@ pages={154--183}
    %%%% wjd: adding pagebreaks for ``draft mode'' to reduce printing costs
    %%%%      To turn off these unnecessary page breaks, set `draft` to false:
    \newboolean{draft}
-   \setboolean{draft}{true}  % set to true to include footnotes
+   \setboolean{draft}{true} 
+   \setboolean{draft}{false}
 
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   %% showkeys: just comment out in the final version
+   \ifthenelse{\boolean{draft}}{\usepackage[notref,notcite]{showkeys}}{}
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
@@ -394,13 +419,18 @@ inputfilesrule=false,
 %\href{mailto:my_address@wikibooks.org}{my\_address@wikibooks.org}
 
 \begin{abstract}
-  We present a rough, unpolished collection of potentially useful facts
+  This is a rough and unpolished collection of potentially useful facts
   about finite groups, most of which are well known. Much of this information
-  appeared previously in disperate unpublished research seminar notes.
-  The author received requests to collect such information into a single document
-  and post it for reference, so that it may be easily cited in other works.
-  With this purpose in mind, the BibTeX data for citing this document appears on the
-  last page.
+  is collected from disperate unpublished seminar notes that I compiled as a
+  graduate student.  Many of these facts were checked (and often discovered)
+  using the \GAP software.  However, some parts were not checked with
+  \GAP and might contain errors. Please send any feedback 
+  to the author at \url{williamdemeo@gmail.com}.
+  
+  One reason to collect these notes in a single document and make them publicly
+  available is in response to email requests from people who wish to cite some of
+  my notes in publications.  With this purpose in mind, the BibTeX data for
+  citing this document appears on the last page below.
 \end{abstract}
 
 %%%%%%%%%%%%%%%%%%%%   Start of main body of article
@@ -459,7 +489,7 @@ inputfilesrule=false,
 \input{ONanScottTypeExamples}
 
 \newpage
-\part{GAP Supplement}
+\part*{GAP Supplement}
 
 \newpage
 \input{GapNotes}
